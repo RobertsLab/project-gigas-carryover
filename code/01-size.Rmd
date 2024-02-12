@@ -6,6 +6,82 @@ date: "2024-02-12"
 
 
 ```{r}
-length <- read.csv("../lifestage_carryover/data/size/gigas_lengths.csv")
+library(tidyverse)
+```
+
+
+
+```{r}
+length <- read.csv("../lifestage_carryover/data/size/gigas-lengths.csv")
+```
+
+
+```{r}
+adult <- length %>%
+  filter(life.stage == "adult") %>%
+  filter(tag %in% c('Blue', 'Bird', 'Blue', 'Pink'))
+```
+
+
+
+```{r}
+# Reshape the data to long format
+#long_data <- tidyr::pivot_longer(female, cols = ends_with("avg.y"), names_to = "Exon", values_to = "Values")
+
+
+adult$tag <- as.factor(adult$tag)
+adult$init.treat <- as.factor(adult$init.treat)
+
+
+# Plotting a dot plot (scatter plot)
+  ggplot(adult, aes(x = month, y = length, color = tag, shape = init.treat)) +
+  geom_point(size = 3) +
+  scale_shape_manual(values=c(16, 17)) + # Use different shapes for control and treatment
+  labs(title = "Scatter Plot of Length by Date", x = "Date", y = "Length") +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  scale_color_discrete(name = "Tag")
+
+
+```
+```{r}
+ggplot(adult, aes(x = init.treat, y = length, fill = tag)) +
+  geom_violin(trim = FALSE) + # Trim is set to FALSE to show the full range of the data
+  facet_wrap(~ month) + # Separate violins by month with the same y-axis scale
+  labs(title = "Violin Plot of Length by Treatment and Tag", x = "Treatment", y = "Length") +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  scale_fill_discrete(name = "Tag") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) # Rotate x labels if needed
+
+```
+
+```{r}
+# Assuming 'adult' is your dataframe with the appropriate columns
+# and 'month' is a column in your dataframe that specifies the month
+
+# First, ensure that 'month' is a factor with the levels in the desired order
+# If the months are already factors, reorder them by:
+adult$month <- factor(adult$month, levels = rev(levels(adult$month)))
+
+# If 'month' is not a factor, convert it to a factor and specify the levels in reverse order
+# For example, if your months are like c("Jan", "Feb", "Mar"), you would do:
+# adult$month <- factor(adult$month, levels = c("Mar", "Feb", "Jan"))
+
+ggplot(adult, aes(x = init.treat, y = length, fill = tag)) +
+  geom_violin(trim = FALSE) + # Trim is set to FALSE to show the full range of the data
+  facet_wrap(~ month, scales = "fixed") + # Separate violins by month with the same y-axis scale
+  labs(title = "Violin Plot of Length by Treatment and Tag", x = "Treatment", y = "Length") +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  scale_fill_discrete(name = "Tag") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # Rotate x labels if needed
+
+# If you want to overlay the points over the violin plot, you can add this lin
+geom_jitter(width = 0.2, aes(color = tag), size = 2, shape = 1, show.legend = FALSE) # Adjust the width for jittering if necessary
+
+# To save the plot to a file
+ggsave("violin_plot.png", width = 10, height = 6, dpi = 300)
+
 ```
 
