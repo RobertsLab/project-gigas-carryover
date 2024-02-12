@@ -1,0 +1,11 @@
+---
+title: "01-size"
+output: html_document
+date: "2024-02-12"
+---
+
+
+```{r}
+length <- read.csv("../lifestage_carryover/data/size/gigas_lengths.csv")
+```
+
