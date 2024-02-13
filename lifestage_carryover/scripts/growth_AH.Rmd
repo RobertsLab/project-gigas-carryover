@@ -76,3 +76,12 @@ plot<-growth%>%
 ggsave(plot=plot, "lifestage_carryover/output/size/mean_lengths.png", width=7, height=4)
 ```
 
+# Run model
+
+```{r}
+model<-aov(length~lifestage*month*treatment, data=growth)
+summary(model)
+
+```
+
+Significant lifestage and month effects. No significant treatment effects. 
