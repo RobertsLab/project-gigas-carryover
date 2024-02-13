@@ -1,0 +1,78 @@
+---
+title: "C. gigas growth - lifestage carryover project" 
+author: "AS Huffmyer"
+date: '2024'
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup  
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Load libraries 
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+# Read in data 
+
+```{r}
+growth<-read_csv("lifestage_carryover/data/size/gigas-lengths.csv")
+
+growth<-growth%>%
+  rename(tag=`tag...1`)%>%
+  select(tag, `life-stage`, `init-treat`, label, month, length)%>%
+  rename(lifestage=`life-stage`, treatment=`init-treat`)
+
+growth$month<-factor(growth$month, levels=c("Oct", "Nov", "Jan"))
+```
+
+# Plot growth over months for each life stage and treatment 
+
+Plot as box plot
+```{r}
+plot<-growth%>%
+  
+  ggplot(aes(color=treatment, x=month, y=length))+
+  geom_boxplot()+
+  facet_grid(~lifestage)+
+  scale_color_manual(values=c("darkgray", "darkred"))+
+  theme_classic();plot
+```
+
+Plot as mean +- standard error. 
+```{r}
+plot<-growth%>%
+  group_by(treatment, month, lifestage)%>%
+  summarise(mean=mean(length, na.rm=TRUE), se=sd(length, na.rm=TRUE)/sqrt(length(length)))%>%
+  
+  ggplot(aes(color=treatment, x=month, y=mean))+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=1)+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, position=position_dodge(0.3), linewidth=0.75)+
+  geom_line(aes(group=treatment), position=position_dodge(0.3), linewidth=1)+
+  facet_grid(~lifestage)+
+  ylab("Mean Length (cm)")+
+  xlab("Month")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot
+
+ggsave(plot=plot, "lifestage_carryover/output/size/mean_lengths.png", width=7, height=4)
+```
+
