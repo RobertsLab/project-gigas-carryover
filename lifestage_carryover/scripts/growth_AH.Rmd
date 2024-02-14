@@ -269,3 +269,9 @@ summary(model)
 ```
 
 Effect of lifestage, no treatment effects. 
+
+                    Df Sum Sq Mean Sq F value   Pr(>F)    
+treatment            1      1       1   0.015    0.904    
+lifestage            3  96056   32019 325.275 3.54e-13 ***
+treatment:lifestage  3    363     121   1.231    0.335    
+Residuals           14   1378      98   
