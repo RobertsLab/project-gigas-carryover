@@ -41,7 +41,9 @@ growth<-growth%>%
 growth$month<-factor(growth$month, levels=c("Oct", "Nov", "Jan"))
 ```
 
-# Plot growth over months for each life stage and treatment 
+# Look at data for whole population together  
+
+## Plot growth over months for each life stage and treatment 
 
 Plot as box plot
 ```{r}
@@ -61,9 +63,9 @@ plot<-growth%>%
 ggsave(plot=plot, "lifestage_carryover/output/size/mean_lengths_box.png", width=7, height=4)
 ```
 
-Plot as mean +- standard error. 
+Plot as mean +- standard error for all.  
 ```{r}
-plot<-growth%>%
+plot2<-growth%>%
   group_by(treatment, month, lifestage)%>%
   summarise(mean=mean(length, na.rm=TRUE), se=sd(length, na.rm=TRUE)/sqrt(length(length)))%>%
   
@@ -78,12 +80,12 @@ plot<-growth%>%
   theme_classic()+
   theme(
     text=element_text(size=12, color="black")
-  );plot
+  );plot2
 
-ggsave(plot=plot, "lifestage_carryover/output/size/mean_lengths.png", width=7, height=4)
+ggsave(plot=plot2, "lifestage_carryover/output/size/mean_lengths.png", width=7, height=4)
 ```
 
-# Run model
+## Run model
 
 ```{r}
 model<-aov(length~lifestage*month*treatment, data=growth)
@@ -92,3 +94,178 @@ summary(model)
 ```
 
 Significant lifestage and month effects. No significant treatment effects. 
+
+# Run plot and model by tag 
+
+Calculate mean size at each month for each replicate and calculate % growth (change/original).  
+
+```{r}
+replicates<-growth%>%
+  group_by(treatment, month, lifestage, tag)%>%
+  summarise(mean=mean(length, na.rm=TRUE))%>%
+  pivot_wider(names_from=month, values_from=mean)%>%
+  mutate(perc_growth_Nov=((Nov-Oct)/Oct)*100)%>%
+  mutate(perc_growth_Jan=((Jan-Oct)/Oct)*100)
+```
+
+## Plot growth for adult animals sampled in November
+
+```{r}
+plot3<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Nov)%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=treatment, x=treatment, y=perc_growth_Nov, shape=tag))+
+  geom_line(aes(group=tag), color="black")+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_shape_manual(name="Family", values=c(15, 16, 17, 18))+
+  ggtitle("Adults: Oct-Nov Growth")+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot3
+
+ggsave(plot=plot3, "lifestage_carryover/output/size/adults_Nov_percent_growth.png", width=4, height=4)
+```
+
+Test for effect of treatment. 
+```{r}
+model<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Nov)%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  aov(perc_growth_Nov~treatment, data=.)
+
+summary(model)
+```
+Effect of treatment just barely not significant (P=0.088). 
+
+            Df Sum Sq Mean Sq F value Pr(>F)  
+treatment    1  8.358   8.358   4.132 0.0883 .
+Residuals    6 12.137   2.023    
+
+## Plot growth for animals measured in January 
+
+Adults
+```{r}
+plot4<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Jan)%>%
+  filter(lifestage=="adult")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=treatment, x=treatment, y=perc_growth_Jan, shape=tag))+
+  geom_line(aes(group=tag), color="black")+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  ylim(-7, 3)+
+  scale_shape_manual(name="Family", values=c(15, 16, 17, 18))+
+  ggtitle("Adults: Oct-Jan Growth")+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot4
+
+ggsave(plot=plot4, "lifestage_carryover/output/size/adults_Jan_percent_growth.png", width=4, height=4)
+```
+
+Juveniles
+```{r}
+plot5<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Jan)%>%
+  filter(lifestage=="juvenile")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=treatment, x=treatment, y=perc_growth_Jan, shape=tag))+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_shape_manual(name="Replicate", values=c(15, 16, 17, 18))+
+  ggtitle("Juvenile: Oct-Jan Growth")+
+  theme_classic()+
+  ylim(0,20)+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot5
+
+ggsave(plot=plot5, "lifestage_carryover/output/size/juvenile_Jan_percent_growth.png", width=4, height=4)
+```
+
+Seed
+
+```{r}
+plot6<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Jan)%>%
+  filter(lifestage=="seed")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=treatment, x=treatment, y=perc_growth_Jan, shape=tag))+
+  #geom_line(aes(group=tag), color="black")+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_shape_manual(name="Replicate", values=c(15, 16, 17, 18))+
+  ggtitle("Seed: Oct-Jan Growth")+
+  theme_classic()+
+  ylim(0,250)+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot6
+
+ggsave(plot=plot6, "lifestage_carryover/output/size/seed_Jan_percent_growth.png", width=4, height=4)
+```
+
+Spat
+
+```{r}
+plot7<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Jan)%>%
+  filter(lifestage=="spat")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=treatment, x=treatment, y=perc_growth_Jan, shape=tag))+
+  #geom_line(aes(group=tag), color="black")+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_shape_manual(name="Replicate", values=c(15, 16, 17, 18))+
+  ggtitle("Spat: Oct-Jan Growth")+
+  theme_classic()+
+  ylim(0,150)+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot7
+
+ggsave(plot=plot7, "lifestage_carryover/output/size/spat_Jan_percent_growth.png", width=4, height=4)
+```
+
+
+## Test for effect of treatment by lifestage 
+
+January all stages 
+
+```{r}
+model<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_Jan)%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  aov(perc_growth_Jan~treatment*lifestage, data=.)
+
+summary(model)
+```
+
+Effect of lifestage, no treatment effects. 
