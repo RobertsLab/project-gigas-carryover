@@ -28,7 +28,7 @@ Our hypotheses are:
  
 ## Experimental Design
 
-To test these hypotheses, we will conduct an acute stress exposure. Oysters were previously conditioned in fall 2023 (Oct-Nov) to either an ambient/control treatment (17°C, no mechanical stress) or a conditioning treatment (daily ramp to 25°C for 6 h daily with once weekly mechanical stress of juveniles and adults).
+To test these hypotheses, we will conduct an acute stress exposure. Oysters were previously conditioned in fall 2023 (Oct-Nov) to either an ambient/control treatment (17°C, no mechanical stress) or a conditioning treatment (daily ramp to 25°C for 6 h daily with once weekly mechanical stress of juveniles and adults). Now, we will expose them to an acute stress of 32°C for 30 minutes.  
 
 Here is the general approach we can use for the day:  
 
@@ -37,29 +37,19 @@ Here is the general approach we can use for the day:
 3. Assess size and mortality of all oysters and take images of spat for future image analyses 
 4. Add new and clear labels to all containers/bags so that they can be moved between tanks. Mark with conditioning treatment, lifestage, and replicate ID. 
 5. Assess sample size and distribution of oysters between control and high acute stress treatments
-6. Re-arrange oysters between a control and high tank in the combinations listed above 
-7. Start the stress exposure by heating the treatment tank (below) *- Add mechanical stress if using*  
-8. At the end of the stress exposure, conduct sampling (below) 
+6. Heat the stress tank to 32°C. 
+7. Start the stress exposure by adding groups in 2-3 groups at a time to the high temperature tank 
+8. At the end of the stress exposure, conduct sampling (below) and repeat with all remaining groups. 
 9. Download loggers 
 10. Clean equipment and reset any remaining oysters 
-
---> **QUESTION TO DISCUSS: Per [this post](https://eric-ess.github.io/experiment-setup/). Because juveniles and adults were also mechanically stressed, but seed and spat were not,  we cannot really compare the conditioning treatments between life stages correct? Does mechanical stress need to be in the acute stress for those lifestages? Or should we keep the stress consistent between all life stages?** 
-
---> **QUESTION TO DISCUSS: How long was the conditioning carried out for in Oct/Nov?**  
-
---> **QUESTION TO DISCUSS: How long should the acute stress be? Previously (in Nov sampling), the stress was 30 min long. Is this enough to see a difference? Should the exposure be longer? Should it be more like 2-3 hours at a high temperature? Per [this post](https://eric-ess.github.io/SecondStressPrep/).** 
-
---> **QUESTION TO DISCUSS: We should consider having all of them in closed containers for this experiment so that they are truly independent, rather than having them in flow through containers. Thoughts?** 
 
 ## Treatment conditions
 
 We will manipulate temperature by heating water in one of the large white tanks and leaving the other at ambient temperature. 
 
---> **QUESTION TO DISCUSS: Previously this was done by immersing animals in pre-heated buckets. Do we want to use this approach again? Could we instead heat the white tanks? If so, do we have heaters out at the hatchery already? Ariana can go out on Monday to test.**  
+**Ariana will preheat the tanks and check heaters on Monday.**  
 
-Oysters will be ramped at a rate of 2°C per hour (as previously used during conditioning period) until reaching the target temperature. 32°C acute stress without ramping was used in the November sampling. 
-
---> **QUESTION TO DISCUSS: Should we use 32°C here again as well? Is this a relevant temperature? Has the target stress changed with seasonality?**  
+Oysters will be submerged in 32°C for 30 minutes for an acute stress.  
 
 ## Sampling protocols
 
@@ -79,7 +69,7 @@ Here are some simplified overviews of protocols that we will be using for this s
 - Go through each replicate tank/bag and record max. length for all live animals. Record the number of dead animals if mortality occured. 
 - Sum the number of animals in each tank/bag. We will use this to distribute across treatments. 
 
-**ARIANA WILL DO THIS MONDAY THE 26TH SO WE HAVE THE ANSWER AHEAD OF TIME.** 
+**Ariana will do this on Monday so we can know how many animals we have to work with ahead of time.** 
 
 #### 2. Collecting samples for RNA and DNA 
 
@@ -96,31 +86,22 @@ Here are some simplified overviews of protocols that we will be using for this s
 3. Conditioned - Ambient: 8-10 per lifestage
 4. Conditioned - Stress: 8-10 per lifestage 
 
-This would be a total of 10 replicates x 4 lifestages x 4 groups = 160 total animals sampled. If we then sample two tissue types from each animal, that would be 320 total tubes. However, this is likely only possible for adults and maybe juveniles. If we sample two tissue types from only adults and juveniles, our total sampling number would be 240 tubes.   
-
-**QUESTION TO DISCUSS: Can we sample RNA/DNA in the same replicate or do we need to take a separate tube for RNA and one for DNA? I think Eric did separate sampling.** 
+This would be a total of 10 replicates x 4 lifestages x 4 groups = 160 total animals sampled. If we then sample two tissue types from each animal, that would be 320 total tubes. However, this is likely only possible for adults and maybe juveniles. If we sample two tissue types from only adults and juveniles, our total sampling number would be 240 tubes. If we do separate DNA and RNA tubes, we will need 480 total tubes.  
 
 #### 3. Respiration immersion fluid testing 
 
 We will want to try this on live animals before destructive sampling. Protocol unknown, new assay.  
 
---> **QUESTION TO DISCUSS: Do we want to run this as a test on a small subset or do a full sampling? How confident are we in this method?** 
-
 **REPLICATION**: We could try n=5 per group (treatment x lifestage) for this sampling. Total animals would be 5 replicates x 4 lifestages x 4 groups = 80 animals. Total 80 tubes. 
+
+Ariana requested the resazurin salt and DMSO needed to make the solutions. We may need to do this the week after if supplies don't arrive in time.  
 
 #### 4. Collecting samples for test lab assays 
 
 - Collect tissue samples from animals for lab assays including enzyme assays, antioxidant capacity, mitochondrial function, etc. 
-- Collect tissue, place in labeled tube, and snap freeze.
+- Collect tissue, place in labeled tube, and snap freeze. 
 
-Potential assays:  
-
-- Sodium ATPase
-- ATP
-- Metabolomics (?)
-- Thermal performance curve (?) - could we record or monitor when mortality happens as a thermal performance curve? Or measure how long they survive at 32°C? We could do this as preliminary plan to see how long they live. We could then come back and do a full assay the next week. We should set up a bucket at 32°C and see how long they live. 
-
-**REPLICATION**: We could try n=5-10 per group (treatment x lifestage) for this sampling. Total animals would be 10 replicates x 4 lifestages x 4 groups = 160 animals. Total 160 tubes. We can try to freeze as much as we want to take to later decide on assays to do.   
+**REPLICATION**: We could try n=5-10 per group (treatment x lifestage) for this sampling. Total animals would be 10 replicates x 4 lifestages x 4 groups = 160 animals. Total 160 tubes.  
 
 ### Total animals needed 
 
@@ -131,8 +112,6 @@ Potential assays:
 Total animals = 100 per lifestage (50 conditioned and 50 not conditioned)  
 
 Note that we can take the physiology sample from the same animal as the DNA/RNA sample if they are big enough (likely only juveniles and adults). 
-
---> **QUESTION TO DISCUSS: Do we have enough? Pending AH assessment on Monday the 26th. Decide on which animals are big enough to take physiology and molecular from the same animal and which need to be separate animals.**  
 
 ## Scheduling 
 
@@ -148,34 +127,28 @@ During sampling, we can have 2 people sampling for RNA and DNA, 1 person samplin
 
 ## Equipment needed
 
---> **QUESTION TO DISCUSS: Go over this list and verify items. Decide on how to get items from UW to Point Whitney.** 
-
 - Liquid nitrogen/dewar/dry shipper **UW**
-- RNA/DNA shield or later alloquoted into tubes **UW**
-- Tubes pre labeled and filled with buffer as needed **UW**
-	- 320 tubes (?) see above for discussion for RNA/DNA 
-	- 160 tubes for physiology samples 
+	- Fill and pick up by Tuesday, can be transported in car Wednesday with folks driving from Seattle/by ferry
+- RNA/DNA shield or later alloquoted into tubes or in large volume to alliquot during the day (~250 mL) **UW**
+- Tubes pre labeled **UW**
+	- 480 ish tubes max for RNA/DNA 
+	- 160 tubes for physiology samples max
 	- Extras in case we want to sample more 
+	- Label tubes from 1-500 ish. Bring more tubes and markers that we can label if we want to use more 
 - Markers **UW**
 - Loggers **Ariana**
-- Heaters (?) **Point Whitney**
+- Heaters **Point Whitney**
 - Gloves **UW**
-- Ethanol 70% **UW**
-- Bleach 10-20% **UW**
-- DI water/water **UW**
-- Pipettes (P1000 and/or P200) **UW**
+- Ethanol 70% (500 mL squirt bottle) **UW**
+- Bleach 10-20% (500 mL squirt bottle) **UW**
+- DI water/water (500 mL squirt bottle) **UW**
+- Pipettes (P1000, P200, and P10) **UW**
 - Bench paper or paper for surface to conduct sampling **UW**
-- Shucking knifes x3 **UW**
-- Razer blades x 3 **UW**
-- Tweezers x 3 **UW**
+- Shucking knifes x 3-4 **UW**
+- Razer blades x 3-4 **UW**
+- Tweezers x 3-4 **UW**
 - Printed copies of spreadsheets (4-5 copies) from example below printed on waterproof paper **UW** 
-- Pencils **UW**
-- Incubators? **UW**
-- DMSO 0.1% **UW**
-- Resazurin salt **UW**
-- 24 and 12 well plates **UW**
-- Mesh bags for sampling **UW**
-- Color standard on ruler or electrical tape **UW** 
+- Pencils and pens **UW**
 
 ## Datasheets 
 
