@@ -79,7 +79,7 @@ Here are some simplified overviews of protocols that we will be using for this s
 - Go through each replicate tank/bag and record max. length for all live animals. Record the number of dead animals if mortality occured. 
 - Sum the number of animals in each tank/bag. We will use this to distribute across treatments. 
 
-**ARIANA WILL TRY TO DO THIS MONDAY THE 26th SO WE HAVE THE ANSWER AHEAD OF TIME.** 
+**ARIANA WILL DO THIS MONDAY THE 26TH SO WE HAVE THE ANSWER AHEAD OF TIME.** 
 
 #### 2. Collecting samples for RNA and DNA 
 
@@ -96,13 +96,13 @@ Here are some simplified overviews of protocols that we will be using for this s
 3. Conditioned - Ambient: 8-10 per lifestage
 4. Conditioned - Stress: 8-10 per lifestage 
 
-This would be a total of 10 replicates x 4 lifestages x 4 groups = 160 total animals sampled. If we then sample two tissue types from each animal, that would be 320 total tubes. However, this is likely only possible for adults and maybe juveniles. If we sample two tissue types from only adults and juveniles, our total sampling number would be 240 tubes. 
+This would be a total of 10 replicates x 4 lifestages x 4 groups = 160 total animals sampled. If we then sample two tissue types from each animal, that would be 320 total tubes. However, this is likely only possible for adults and maybe juveniles. If we sample two tissue types from only adults and juveniles, our total sampling number would be 240 tubes.   
 
 **QUESTION TO DISCUSS: Can we sample RNA/DNA in the same replicate or do we need to take a separate tube for RNA and one for DNA? I think Eric did separate sampling.** 
 
 #### 3. Respiration immersion fluid testing 
 
-We will want to try this on live animals before destructive sampling. 
+We will want to try this on live animals before destructive sampling. Protocol unknown, new assay.  
 
 --> **QUESTION TO DISCUSS: Do we want to run this as a test on a small subset or do a full sampling? How confident are we in this method?** 
 
@@ -129,9 +129,15 @@ Note that we can take the physiology sample from the same animal as the DNA/RNA 
 
 ## Scheduling 
 
-We will have several people helping for this sampling: Steven, Eric, Ariana, Kathleen, and Grace. 
+*Monday February 26th*: Ariana at Point Whitney; prepare equipment, test heaters, measure growth, count live animals 
 
-We will expect to start set up and preparations around 9am with a goal to start the stress treatments by 11am-1pm. Sampling could then occur around 1-3pm with the day finished by 5pm or earlier. This timeline could change depending on answers to our questions above. 
+*Wednesday February 28th*: Sampling day 
+
+We will have several people helping for this sampling: Steven, Eric, Ariana, Kathleen, and Grace.   
+
+We will expect to start set up and preparations around 9am with a goal to start the stress treatments by 11am-1pm. Sampling could then occur around 1-3pm with the day finished by 5pm or earlier. This timeline could change depending on answers to our questions above.   
+
+During sampling, we can have 2 people sampling for RNA and DNA, 1 person sampling for physiology, and 1-2 people working on the respirometry assay.  
 
 ## Equipment needed
 
@@ -171,11 +177,14 @@ Here is a sample of a spreadsheet that we should use to track sampling.
 
 ## GitHub preparation 
 
-Ariana added the draft data sheet [to the GitHub here]().  
+Ariana added the draft data sheet [to the GitHub here](https://github.com/RobertsLab/project-gigas-carryover/blob/main/lifestage_carryover/notebooks/datasheet_example.xlsx).  
 
-Ariana will also generate scripts to look at temperature logger data.  
+Ariana will also generate scripts to look at temperature logger data. 
+
+We will also need to add a script for analyzing the respiration data, but I'm not sure what that will look like with the new liquid protocol.   
 
 ## Other things to do during this sampling day 
 
 - Look at equipment for starting next round of conditioning
 - Check food status 
+- Develop respiration liquid protocol 
