@@ -111,9 +111,16 @@ We will want to try this on live animals before destructive sampling. Protocol u
 #### 4. Collecting samples for test lab assays 
 
 - Collect tissue samples from animals for lab assays including enzyme assays, antioxidant capacity, mitochondrial function, etc. 
-- Collect tissue, place in labeled tube, and snap freeze. 
+- Collect tissue, place in labeled tube, and snap freeze.
 
-**REPLICATION**: We could try n=5-10 per group (treatment x lifestage) for this sampling. Total animals would be 10 replicates x 4 lifestages x 4 groups = 160 animals. Total 160 tubes.  
+Potential assays:  
+
+- Sodium ATPase
+- ATP
+- Metabolomics (?)
+- Thermal performance curve (?) - could we record or monitor when mortality happens as a thermal performance curve? Or measure how long they survive at 32°C? We could do this as preliminary plan to see how long they live. We could then come back and do a full assay the next week. We should set up a bucket at 32°C and see how long they live. 
+
+**REPLICATION**: We could try n=5-10 per group (treatment x lifestage) for this sampling. Total animals would be 10 replicates x 4 lifestages x 4 groups = 160 animals. Total 160 tubes. We can try to freeze as much as we want to take to later decide on assays to do.   
 
 ### Total animals needed 
 
@@ -151,19 +158,24 @@ During sampling, we can have 2 people sampling for RNA and DNA, 1 person samplin
 	- Extras in case we want to sample more 
 - Markers **UW**
 - Loggers **Ariana**
-- Heaters (?) **UW or Point Whitney?**
+- Heaters (?) **Point Whitney**
 - Gloves **UW**
 - Ethanol 70% **UW**
 - Bleach 10-20% **UW**
 - DI water/water **UW**
 - Pipettes (P1000 and/or P200) **UW**
 - Bench paper or paper for surface to conduct sampling **UW**
-- Shucking knifes x3 **UW or Point Whitney?**
+- Shucking knifes x3 **UW**
 - Razer blades x 3 **UW**
 - Tweezers x 3 **UW**
-- Salad spinners (?) **UW or Point Whitney?**
 - Printed copies of spreadsheets (4-5 copies) from example below printed on waterproof paper **UW** 
 - Pencils **UW**
+- Incubators? **UW**
+- DMSO 0.1% **UW**
+- Resazurin salt **UW**
+- 24 and 12 well plates **UW**
+- Mesh bags for sampling **UW**
+- Color standard on ruler or electrical tape **UW** 
 
 ## Datasheets 
 
