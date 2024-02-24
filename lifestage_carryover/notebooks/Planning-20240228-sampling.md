@@ -75,8 +75,8 @@ Here are some simplified overviews of protocols that we will be using for this s
 
 - Remove animal from treatment
 - Immediately sample tissue with sterile surface and instruments
-- Place one sample into labeled RNA tube with storage buffer 
-- Place one sample into labeled DNA tube with storage buffer 
+- Place one sample into labeled RNA tube with storage buffer from mantle and one from gill 
+- Place one tissue sample into labeled DNA tube with storage buffer 
 - Sterilize before the next sample 
 
 **REPLICATION**: Eric sampled n=7-8 adults during first stressor. We should aim for n=8-10 minimum per group for RNA/DNA. This would result in the following sample sizes: 
@@ -86,7 +86,7 @@ Here are some simplified overviews of protocols that we will be using for this s
 3. Conditioned - Ambient: 8-10 per lifestage
 4. Conditioned - Stress: 8-10 per lifestage 
 
-This would be a total of 10 replicates x 4 lifestages x 4 groups = 160 total animals sampled. If we then sample two tissue types from each animal, that would be 320 total tubes. However, this is likely only possible for adults and maybe juveniles. If we sample two tissue types from only adults and juveniles, our total sampling number would be 240 tubes. If we do separate DNA and RNA tubes, we will need 480 total tubes.  
+This would be a total of 10 replicates x 4 lifestages x 4 groups = 160 total animals sampled. If we then sample two tissue types from each animal from RNA, that would be 320 total tubes for RNA. However, this is likely only possible for adults and maybe juveniles. If we sample two tissue types from only adults and juveniles, our total sampling number would be 240 tubes for RNA. If we sample 1 tissue sample for DNA from all animals, we will need 160 DNA tubes. 
 
 #### 3. Respiration immersion fluid testing 
 
@@ -101,15 +101,15 @@ Ariana requested the resazurin salt and DMSO needed to make the solutions. We ma
 - Collect tissue samples from animals for lab assays including enzyme assays, antioxidant capacity, mitochondrial function, etc. 
 - Collect tissue, place in labeled tube, and snap freeze. 
 
-**REPLICATION**: We could try n=5-10 per group (treatment x lifestage) for this sampling. Total animals would be 10 replicates x 4 lifestages x 4 groups = 160 animals. Total 160 tubes.  
+**REPLICATION**: We could try n=5-10 per group (treatment x lifestage) for this sampling. Total animals would be 5 replicates x 4 lifestages x 4 groups = 80 animals. Total 80 tubes. We could add an addition 20 tubes for test assays. 
 
 ### Total animals needed 
 
 - RNA/DNA = 40 animals per lifestage (20 conditioned and 20 not conditioned) 
 - Respiration = 20 animals per lifestage (10 conditioned and 10 not conditioned) *may increase depending on what we want to do) 
-- Physiology/assay testing = 40 animals per lifestage (20 conditioned and 20 not conditioned) 
+- Physiology/assay testing = 20 animals per lifestage (10 conditioned and 10 not conditioned) 
 
-Total animals = 100 per lifestage (50 conditioned and 50 not conditioned)  
+Total animals = 80 per lifestage (40 conditioned and 40 not conditioned)  
 
 Note that we can take the physiology sample from the same animal as the DNA/RNA sample if they are big enough (likely only juveniles and adults). 
 
