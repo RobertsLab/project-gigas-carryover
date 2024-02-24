@@ -127,28 +127,7 @@ During sampling, we can have 2 people sampling for RNA and DNA, 1 person samplin
 
 ## Equipment needed
 
-- Liquid nitrogen/dewar/dry shipper **UW**
-	- Fill and pick up by Tuesday, can be transported in car Wednesday with folks driving from Seattle/by ferry
-- RNA/DNA shield or later alloquoted into tubes or in large volume to alliquot during the day (~250 mL) **UW**
-- Tubes pre labeled **UW**
-	- 480 ish tubes max for RNA/DNA 
-	- 160 tubes for physiology samples max
-	- Extras in case we want to sample more 
-	- Label tubes from 1-500 ish. Bring more tubes and markers that we can label if we want to use more 
-- Markers **UW**
-- Loggers **Ariana**
-- Heaters **Point Whitney**
-- Gloves **UW**
-- Ethanol 70% (500 mL squirt bottle) **UW**
-- Bleach 10-20% (500 mL squirt bottle) **UW**
-- DI water/water (500 mL squirt bottle) **UW**
-- Pipettes (P1000, P200, and P10) **UW**
-- Bench paper or paper for surface to conduct sampling **UW**
-- Shucking knifes x 3-4 **UW**
-- Razer blades x 3-4 **UW**
-- Tweezers x 3-4 **UW**
-- Printed copies of spreadsheets (4-5 copies) from example below printed on waterproof paper **UW** 
-- Pencils and pens **UW**
+See [this GitHub issue](https://github.com/RobertsLab/resources/issues/1817)
 
 ## Datasheets 
 
