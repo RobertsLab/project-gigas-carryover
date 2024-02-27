@@ -299,8 +299,8 @@ plot8<-replicates%>%
   geom_point()+
   geom_boxplot(fill=NA)+
   ylab("% Winter Growth per Day")+
-  xlab("Life Stage")+
-  scale_x_discrete(limits=c("spat", "seed", "juvenile", "adult"), labels=c("Spat", "Seed", "Juvenile", "Adult"))+
+  xlab("Life Stage \nLength")+
+  scale_x_discrete(limits=c("spat", "seed", "juvenile", "adult"), labels=c("Spat \n<10mm", "Seed \n15-25mm", "Juvenile \n30-40mm", "Adult \n>45mm"))+
   theme_classic()+
   theme(
     text=element_text(size=12, color="black"), 
@@ -308,5 +308,14 @@ plot8<-replicates%>%
     axis.title=element_text(size=14, color="black", face="bold")
   );plot8
 
-ggsave(plot=plot8, "lifestage_carryover/output/size/lifestage_growth.png", width=5, height=4)
+ggsave(plot=plot8, "lifestage_carryover/output/size/lifestage_growth.png", width=5, height=5)
 ```
+
+Calculate size of each lifestage 
+```{r}
+avg_size<-replicates%>%
+  select(lifestage, Jan)%>%
+  group_by(lifestage)%>%
+  summarise(mean=mean(Jan, na.rm=TRUE));avg_size
+```
+
