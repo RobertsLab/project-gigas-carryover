@@ -275,3 +275,38 @@ treatment            1      1       1   0.015    0.904
 lifestage            3  96056   32019 325.275 3.54e-13 ***
 treatment:lifestage  3    363     121   1.231    0.335    
 Residuals           14   1378      98   
+
+# Plot percent growth in only ambient treatment 
+
+Plot growth rates between lifestages. 
+
+Calculate growth as % growth per day. 
+
+```{r}
+replicates<-replicates%>%
+  mutate(perc_growth_day=perc_growth_Jan/60)
+```
+
+
+```{r}
+plot8<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_day)%>%
+  #filter(treatment=="control")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(x=lifestage, y=perc_growth_day))+
+  geom_point()+
+  geom_boxplot(fill=NA)+
+  ylab("% Winter Growth per Day")+
+  xlab("Life Stage")+
+  scale_x_discrete(limits=c("spat", "seed", "juvenile", "adult"), labels=c("Spat", "Seed", "Juvenile", "Adult"))+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black"), 
+    axis.text=element_text(size=12, color="black"), 
+    axis.title=element_text(size=14, color="black", face="bold")
+  );plot8
+
+ggsave(plot=plot8, "lifestage_carryover/output/size/lifestage_growth.png", width=5, height=4)
+```
