@@ -319,3 +319,10 @@ avg_size<-replicates%>%
   summarise(mean=mean(Jan, na.rm=TRUE));avg_size
 ```
 
+```{r}
+avg_size<-replicates%>%
+  select(lifestage, tag, Jan)%>%
+  filter(lifestage=="adult")%>%
+  group_by(tag)%>%
+  summarise(mean=mean(Jan, na.rm=TRUE));avg_size
+```
