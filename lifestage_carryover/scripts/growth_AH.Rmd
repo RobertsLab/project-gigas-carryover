@@ -54,7 +54,8 @@ plot<-growth%>%
   filter(!tag=="Toad")%>%
   
   ggplot(aes(color=treatment, x=month, y=length))+
-  geom_boxplot()+
+  geom_boxplot(fill=NA, outlier.shape=NA)+
+  geom_point(position=position_dodge(0.7), size=1)+
   facet_grid(~lifestage)+
   ylab("Mean Length (mm)")+
   xlab("Month")+
