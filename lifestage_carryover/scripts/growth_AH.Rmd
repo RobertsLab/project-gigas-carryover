@@ -112,6 +112,15 @@ month:treatment              3     76      25    0.321   0.810
 lifestage:month:treatment    6    466      78    0.983   0.435    
 Residuals                 1490 117606      79  
 
+Conduct posthoc test
+```{r}
+library(emmeans)
+emm<-emmeans(model, ~ treatment | month | lifestage)
+pairs(emm)
+```
+
+Growth is different in February for spat. No other differences.  
+
 # Look at growth as percent growth summarised at the level of replicate containers or tags 
 
 Calculate mean size at each month for each replicate and calculate % growth (change/original).  
