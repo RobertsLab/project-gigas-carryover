@@ -121,6 +121,59 @@ pairs(emm)
 
 Growth is different in February for spat. No other differences.  
 
+
+
+
+
+
+# Plot size of only adults 
+
+Plot boxplot 
+```{r}
+plot2a<-growth%>%
+  filter(tag %in% c("Blue", "Pink", "Bird", "Orange"))%>%
+  
+  group_by(treatment, month, tag)%>%
+  
+  ggplot(aes(color=treatment, x=month, y=length))+
+  geom_point(aes(group=interaction(treatment, tag)), position=position_dodge(0.3), size=1)+
+  geom_boxplot(outlier.shape=NA)+
+  facet_grid(~tag)+
+  ylab("Mean Length (mm)")+
+  xlab("Month")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot2a
+
+ggsave(plot=plot2a, "lifestage_carryover/output/size/boxplot_lengths_adults.png", width=7, height=4)
+```
+
+Plot as mean +- standard error for all.  
+```{r}
+plot2b<-growth%>%
+  filter(tag %in% c("Blue", "Pink", "Bird", "Orange"))%>%
+  
+  group_by(treatment, month, tag)%>%
+  summarise(mean=mean(length, na.rm=TRUE), se=sd(length, na.rm=TRUE)/sqrt(length(length)))%>%
+  
+  ggplot(aes(color=treatment, x=month, y=mean))+
+  geom_point(aes(group=interaction(treatment, tag)), position=position_dodge(0.3), size=1)+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0, position=position_dodge(0.3), linewidth=0.75)+
+  geom_line(aes(group=treatment), position=position_dodge(0.3), linewidth=1)+
+  facet_grid(~tag)+
+  ylab("Mean Length (mm)")+
+  xlab("Month")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot2b
+
+ggsave(plot=plot2b, "lifestage_carryover/output/size/mean_lengths_adults.png", width=7, height=4)
+```
+
 # Look at growth as percent growth summarised at the level of replicate containers or tags 
 
 Calculate mean size at each month for each replicate and calculate % growth (change/original).  
