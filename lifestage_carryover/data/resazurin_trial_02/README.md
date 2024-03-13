@@ -2,6 +2,16 @@
 
 ---
 
+### Experimental Design Overview
+
+- 12-well plate had oysters in wells A01-C01.
+- Wells C02-C03 were negative controls.
+- Well C04 was empty (i.e. no liquid of any kind).
+- Time 0 (t0) measurements were taken _before_ the addition of oysters.
+- For heat stress, resazurin assay media was distributed to wells/dishes and pre-heated to 35<sup>o</sup>C for 45mins prior to the t0 measurement.
+
+---
+
 All `*.xls` files are the raw data from the Victor<sup>3</sup> 1420 (Perkin Elmer) plate reader. Sample names have been added to the sheet to identify well contents.
 
 - [`20240312-cgig-12_well-dishes-with_ruler.jpg`](20240312-cgig-12_well-dishes-with_ruler.jpg): Photo of oysters used in this trial. Photo includes a ruler to aid with post-experiment measurments, if desired.
