@@ -1,0 +1,25 @@
+tag_tank,lifestage,tube_ID,conditioning_treatment,acute_treatment,preservation_method,20240314.priority
+right-seed,seed,223,control,high,RNA later 750 uL,2
+right-seed,seed,234,control,high,RNA later 750 uL,2
+right-seed,seed,243,control,high,RNA later 750 uL,2
+right-seed,seed,244,control,high,RNA later 750 uL,2
+right-seed,seed,254,control,high,RNA later 750 uL,2
+right-seed,seed,264,control,high,RNA later 750 uL,2
+left-seed,seed,200,treated,high,RNA later 750 uL,2
+left-seed,seed,211,treated,high,RNA later 750 uL,2
+left-seed,seed,256,treated,high,RNA later 750 uL,2
+left-seed,seed,257,treated,high,RNA later 750 uL,2
+left-seed,seed,266,treated,high,RNA later 750 uL,2
+left-seed,seed,285,treated,high,RNA later 750 uL,2
+right-spat ,spat,206,control,high,RNA later 750 uL,1
+right-spat ,spat,262,control,high,RNA later 750 uL,1
+right-spat ,spat,274,control,high,RNA later 750 uL,1
+right-spat ,spat,282,control,high,RNA later 750 uL,1
+right-spat ,spat,284,control,high,RNA later 750 uL,1
+right-spat ,spat,289,control,high,RNA later 750 uL,1
+left-spat,spat,220,treated,high,RNA later 750 uL,1
+left-spat,spat,226,treated,high,RNA later 750 uL,1
+left-spat,spat,242,treated,high,RNA later 750 uL,1
+left-spat,spat,253,treated,high,RNA later 750 uL,1
+left-spat,spat,296,treated,high,RNA later 750 uL,1
+left-spat,spat,298,treated,high,RNA later 750 uL,1
