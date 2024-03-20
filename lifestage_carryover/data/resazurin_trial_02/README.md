@@ -38,4 +38,4 @@ All `*.xls` files are the raw data from the Victor<sup>3</sup> 1420 (Perkin Elme
 
 - [`20240312-cgig-resazurin-prestress-t.1.0.xls`](20240312-cgig-resazurin-prestress-t.1.0.xls): Fluorescence measurements of 12-well plate oysters pre-stress taken after 1.0hrs.
 
-- [`20240312-cgig-resazurin-trial-02.csv`](20240312-cgig-resazurin-trial-02.csv): All measurement data collected (size/weight/fluorescence) for this trial.
+- [`20240312-cgig-resazurin-trial-02.csv`](20240312-cgig-resazurin-trial-02.csv): All measurement data collected (size/weight/fluorescence) for this trial. 
