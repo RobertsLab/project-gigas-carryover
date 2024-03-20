@@ -13,3 +13,4 @@
 - [`full.png`](full.png): Overhead image of two 12-well plates and two glass petri dishes with oysters. Includes ruler for scale.
 
 - [`stress.png`](stress.png): Overhead image of 12-well plate containing stresses oysters. Includes ruler for scale.
+ 

@@ -1,0 +1,219 @@
+---
+title: "Resazurin trials - lifestage carryover project" 
+author: "AS Huffmyer"
+date: '2024'
+output:
+  html_document:
+    code_folding: hide
+    toc: yes
+    toc_depth: 6
+    toc_float: yes
+  pdf_document:
+    keep_tex: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+# Setup  
+
+Set up workspace, set options, and load required packages.    
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Load libraries 
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+# Read in data 
+
+```{r}
+data<-read_csv("lifestage_carryover/data/resazurin_trial_02/20240312-cgig-resazurin-trial-02.csv")
+
+data<-data%>%
+  select(well, sample, type, `weight-mg`, treatment, `t0`, `t0.5`, `t1.0`)%>%
+  rename(weight.mg=`weight-mg`, time0=`t0`, time0.5=`t0.5`, time1=`t1.0`)
+
+```
+
+# Calculate corrected values
+
+Calculate change in 0.5 and 1 time values from the initial t0 value. 
+```{r}
+
+data<-data%>%
+  mutate(change_time0.5=time0.5-time0)%>%
+  mutate(change_time1=time1-time0)
+```
+
+Calculate average of change in negative controls for pre-stress and stress plates for normalization. 
+
+```{r}
+neg_stress<-data%>%
+  filter(type=="neg-control" & treatment=="heat_stress")%>%
+  group_by(treatment)%>%
+  summarise(neg_stress_mean0.5=mean(change_time0.5), neg_stress_mean1=mean(change_time1))
+
+neg_prestress<-data%>%
+  filter(type=="neg-control" & treatment=="pre-stress")%>%
+  group_by(treatment)%>%
+  summarise(neg_control_mean0.5=mean(change_time0.5), neg_control_mean1=mean(change_time1))
+```
+
+Add values into data frame for controls. 
+
+```{r}
+data<-data%>%
+  mutate(neg_stress_mean0.5=neg_stress$neg_stress_mean0.5)%>%
+  mutate(neg_stress_mean1=neg_stress$neg_stress_mean1)%>%
+  mutate(neg_control_mean0.5=neg_prestress$neg_control_mean0.5)%>%
+  mutate(neg_control_mean1=neg_prestress$neg_control_mean1)
+
+head(data)
+```
+
+Subtract changes in negative controls from changes in oyster values to generate a corrected value. 
+
+```{r}
+data<-data%>%
+  mutate(corr_time0.5=if_else(treatment=="pre-stress", change_time0.5-neg_control_mean0.5, 
+                              if_else(treatment=="heat_stress", change_time0.5-neg_stress_mean0.5, NA)))%>%
+  
+  mutate(corr_time1=if_else(treatment=="pre-stress", change_time1-neg_control_mean1, 
+                              if_else(treatment=="heat_stress", change_time1-neg_stress_mean1, NA)))
+  
+```
+
+Select data we want to keep. 
+
+```{r}
+data<-data%>%
+  select(well, sample, type, weight.mg, treatment, corr_time1)%>%
+  filter(!type=="neg-control")%>%
+  filter(!type=="empty")
+```
+
+There are some negative values at time 0.5, so lets just use time 1 for now (end of run).  
+
+Pivot wider. 
+
+```{r}
+data<-data%>%
+  pivot_wider(names_from=treatment, values_from=corr_time1)
+```
+
+Calculate percent change in values after stress compared to control. 
+
+```{r}
+data<-data%>%
+  mutate(perc_change=100*(heat_stress-`pre-stress`)/`pre-stress`)
+```
+
+# Plot data scaled by weight separate for treatments  
+
+Plot percent change. 
+```{r}
+plot1<-data%>%
+  filter(perc_change<3000)%>% #remove outlier
+  filter(weight.mg<2000)%>% #remove large oyster
+  
+  ggplot(aes(x=weight.mg, y=perc_change))+
+  #geom_smooth(color="darkred", se=FALSE, method="lm")+
+  geom_vline(xintercept=100)+
+  geom_hline(yintercept=0)+
+  geom_point(size=3)+
+  ylab("Percent Change [Stress-Control]")+
+  xlab("Oyster")+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot1
+```
+
+Plot only control readings. 
+```{r}
+plot2<-data%>%
+  #filter(perc_change<3000)%>% #remove outlier
+  filter(weight.mg<2000)%>% #remove large oysters
+  filter(heat_stress<7500)%>%
+  
+  ggplot(aes(x=weight.mg, y=`pre-stress`))+
+  geom_smooth(color="darkgray", se=FALSE, method="lm")+
+  geom_point(size=3)+
+  ylab("Fluorescence [Control]")+
+  xlab("Weight (mg)")+
+  ylim(0,15000)+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot2
+```
+
+Plot only stress readings. 
+```{r}
+plot3<-data%>%
+  #filter(perc_change<3000)%>% #remove outlier
+  filter(weight.mg<2000)%>% #remove large oysters
+  filter(heat_stress<7500)%>%
+  
+  ggplot(aes(x=weight.mg, y=heat_stress))+
+  geom_smooth(color="darkred", se=FALSE, method="lm")+
+  geom_point(size=3)+
+  ylab("Fluorescence [Stress]")+
+  xlab("Weight (mg)")+
+  ylim(0,15000)+
+  theme_classic()+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot3
+```
+
+Generate plot for grant. 
+
+```{r}
+library(cowplot)
+
+plots<-plot_grid(plot2, plot3, ncol=2, nrow=1, labels = c('B', 'C'), align="vh")
+
+ggsave(filename="lifestage_carryover/output/resazurin/scale_weight.png", plot=plots, dpi=300, width=6, height=4, units="in")
+```
+
+# Plot data scaled by weight together for treatments  
+
+Re arrange data to long format. 
+
+```{r}
+long<-data%>%
+  select(!perc_change)%>%
+  pivot_longer(cols=c("pre-stress", "heat_stress"), values_to="value", names_to="treatment")
+```
+
+Plot. 
+
+```{r}
+plot4<-long%>%
+  filter(weight.mg<400)%>% #remove large oysters
+  filter(!c(treatment=="heat_stress" & value>7500))%>% #remove outliers as done above
+  
+  ggplot(aes(x=weight.mg, y=value, color=treatment))+
+  geom_smooth(aes(group=treatment),se=FALSE, method="lm")+
+  geom_point(size=3)+
+  scale_color_manual(values=c("darkred", "darkgray"), labels=c("heat stress", "control"), name="Treatment")+
+  ylab("Change in Fluorescence (1 hr)")+
+  xlab("Weight (mg)")+
+  ylim(0,15000)+
+  theme_classic()+
+  ggtitle("B")+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot4
+
+ggsave(filename="lifestage_carryover/output/resazurin/treatment_scale_weights.png", plot=plot4, dpi=300, width=5, height=4, units="in")
+```
+
+
+
+
