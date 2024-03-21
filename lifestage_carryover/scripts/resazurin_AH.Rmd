@@ -214,6 +214,30 @@ plot4<-long%>%
 ggsave(filename="lifestage_carryover/output/resazurin/treatment_scale_weights.png", plot=plot4, dpi=300, width=5, height=4, units="in")
 ```
 
+# Plot data normalized to weight 
 
+```{r}
+long_change<-data%>%
+  pivot_longer(cols=c("pre-stress", "heat_stress"), values_to="value", names_to="treatment")%>%
+  mutate(perc_change_mg=perc_change/weight.mg)
+```
 
+Plot % change normalized to oyster weight. 
+```{r}
+plot5<-long_change%>%
+  filter(weight.mg<400)%>% #remove large oysters
+  filter(!c(treatment=="heat_stress" & value>7500))%>% #remove outliers as done above
+  
+  ggplot(aes(x=weight.mg, y=perc_change_mg))+
+  geom_smooth(se=FALSE, method="lm", color="darkgray")+
+  geom_point(size=3)+
+  ylab("% Change in Fluorescence per mg")+
+  xlab("Weight (mg)")+
+  #ylim(0,15000)+
+  theme_classic()+
+  ggtitle("B")+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot5
+```
 
