@@ -1,33 +1,33 @@
-Sample,Lifestage,Run ID,Assay Name,Test Name,Test Date,Qubit tube conc.,Units,Original sample conc.,Units,Sample Volume (uL),Dilution Factor,Std 1 RFU,Std 2 RFU,Std 3 RFU,Excitation,Emission,Green RFU,Far Red RFU
-200,Seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084102,3/19/24 08:41,0.967,ug/mL,193,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,2591.75
-211,Seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084109,3/19/24 08:41,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,579.46
-211,Seed,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085416,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,70.41
-223,Seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084117,3/19/24 08:41,0.942,ug/mL,188,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,2535.57
-234,Seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084125,3/19/24 08:41,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,580.47
-234,Seed,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085424,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,72.16
-243,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084134,3/19/24 08:41,0.058,ug/mL,11.6,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,644.88
-244,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084142,3/19/24 08:41,1.43,ug/mL,286,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,3622.21
-254,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084150,3/19/24 08:41,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,625.12
-254,seed,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085433,3/19/24 08:54,22,ug/mL,4.4,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,117.67
-256,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084200,3/19/24 08:42,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,584.02
-256,seed,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085441,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,70.73
-257,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084209,3/19/24 08:42,1.22,ug/mL,244,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,3143.02
-264,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084216,3/19/24 08:42,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,603
-264,seed,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085450,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,108.41
-266,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084224,3/19/24 08:42,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,593.64
-266,seed,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085458,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,69.33
-285,seed,2024-03-19_084036,RNA Broad range,Sample_#240319-084234,3/19/24 08:42,0.051,ug/mL,10.2,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,632.22
-206,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062652,3/19/24 06:26,0.148,ug/mL,29.6,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,805.27
-220,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062700,3/19/24 06:27,0.648,ug/mL,130,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1813.33
-226,Spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062707,3/19/24 06:27,0.352,ug/mL,70.4,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1205.32
-242,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062713,3/19/24 06:27,0.344,ug/mL,68.8,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1189.61
-253,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062719,3/19/24 06:27,0.231,ug/mL,46.2,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,964.73
-262,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062726,3/19/24 06:27,Out of range,ug/mL,Out of range,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,583.94
-262,spat,2024-03-19_063813,RNA High sensitivity,Sample_#240319-063838,3/19/24 06:38,Out of range,ug/mL,Out of range,ng/uL,1,200,71.09,1134.09,,Red,Far Red,,80.13
-274,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062734,3/19/24 06:27,Out of range,ug/mL,Out of range,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,606.03
-274,spat,2024-03-19_063813,RNA High sensitivity,Sample_#240319-063846,3/19/24 06:38,Out of range,ug/mL,Out of range,ng/uL,1,200,71.09,1134.09,,Red,Far Red,,101.55
-282,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062742,3/19/24 06:27,0.122,ug/mL,24.4,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,757.53
-284,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062752,3/19/24 06:27,0.244,ug/mL,48.8,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,990.54
-289,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062758,3/19/24 06:27,0.141,ug/mL,28.2,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,793.34
-296,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062805,3/19/24 06:28,0.355,ug/mL,71,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1211.38
-298,spat,2024-03-19_062625,RNA Broad range,Sample_#240319-062812,3/19/24 06:28,0.056,ug/mL,11.2,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,638.87
+Sample,Lifestage,Conditioning_Treatment,Acute_Treatment,Run ID,Assay Name,Test Name,Test Date,Qubit tube conc.,Units,Original sample conc.,Units,Sample Volume (uL),Dilution Factor,Std 1 RFU,Std 2 RFU,Std 3 RFU,Excitation,Emission,Green RFU,Far Red RFU
+200,seed,treated,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084102,3/19/24 08:41,0.967,ug/mL,193,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,2591.75
+206,spat,control,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062652,3/19/24 06:26,0.148,ug/mL,29.6,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,805.27
+211,seed,treated,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084109,3/19/24 08:41,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,579.46
+211,seed,treated,high,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085416,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,70.41
+220,spat,treated,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062700,3/19/24 06:27,0.648,ug/mL,130,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1813.33
+223,seed,control,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084117,3/19/24 08:41,0.942,ug/mL,188,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,2535.57
+226,Spat,treated,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062707,3/19/24 06:27,0.352,ug/mL,70.4,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1205.32
+234,seed,control,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084125,3/19/24 08:41,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,580.47
+234,seed,control,high,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085424,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,72.16
+242,spat,treated,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062713,3/19/24 06:27,0.344,ug/mL,68.8,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1189.61
+243,seed,control,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084134,3/19/24 08:41,0.058,ug/mL,11.6,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,644.88
+244,seed,control,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084142,3/19/24 08:41,1.43,ug/mL,286,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,3622.21
+253,spat,treated,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062719,3/19/24 06:27,0.231,ug/mL,46.2,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,964.73
+254,seed,control,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084150,3/19/24 08:41,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,625.12
+254,seed,control,high,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085433,3/19/24 08:54,22,ug/mL,4.4,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,117.67
+256,seed,treated,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084200,3/19/24 08:42,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,584.02
+256,seed,treated,high,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085441,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,70.73
+257,seed,treated,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084209,3/19/24 08:42,1.22,ug/mL,244,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,3143.02
+262,spat,control,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062726,3/19/24 06:27,Out of range,ug/mL,Out of range,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,583.94
+262,spat,control,high,2024-03-19_063813,RNA High sensitivity,Sample_#240319-063838,3/19/24 06:38,Out of range,ug/mL,Out of range,ng/uL,1,200,71.09,1134.09,,Red,Far Red,,80.13
+264,seed,control,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084216,3/19/24 08:42,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,603
+264,seed,control,high,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085450,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,108.41
+266,seed,treated,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084224,3/19/24 08:42,Out of range,ug/mL,Out of range,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,593.64
+266,seed,treated,high,2024-03-19_085353,RNA High sensitivity,Sample_#240319-085458,3/19/24 08:54,Out of range,ug/mL,Out of range,ng/uL,1,200,70.57,1151.67,,Red,Far Red,,69.33
+274,spat,control,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062734,3/19/24 06:27,Out of range,ug/mL,Out of range,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,606.03
+274,spat,control,high,2024-03-19_063813,RNA High sensitivity,Sample_#240319-063846,3/19/24 06:38,Out of range,ug/mL,Out of range,ng/uL,1,200,71.09,1134.09,,Red,Far Red,,101.55
+282,spat,control,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062742,3/19/24 06:27,0.122,ug/mL,24.4,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,757.53
+284,spat,control,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062752,3/19/24 06:27,0.244,ug/mL,48.8,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,990.54
+285,seed,treated,high,2024-03-19_084036,RNA Broad range,Sample_#240319-084234,3/19/24 08:42,0.051,ug/mL,10.2,ng/uL,1,200,548.31,10638.12,,Red,Far Red,,632.22
+289,spat,control,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062758,3/19/24 06:27,0.141,ug/mL,28.2,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,793.34
+296,spat,treated,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062805,3/19/24 06:28,0.355,ug/mL,71,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,1211.38
+298,spat,treated,high,2024-03-19_062625,RNA Broad range,Sample_#240319-062812,3/19/24 06:28,0.056,ug/mL,11.2,ng/uL,1,200,551.05,10077.85,,Red,Far Red,,638.87
