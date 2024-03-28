@@ -169,7 +169,7 @@ seed_boxplot <- ggplot(seed_delta_Cq_df, aes(x = Target, y = delta_Cq, fill = tr
   geom_boxplot(position = position_dodge(width = 0.75)) +
   theme_minimal() +
   theme(legend.position = "right") +
-  labs(x = "Target", y = "Delta Cq") + 
+  labs(x = "Target", y = "Delta Cq", title = "Seed") + 
   annotate("text", x = t_test_results$Target, y = Inf, label = t_test_results$asterisk, # Adds asterisks
            vjust = -0.5, size = 4, color = "orange")
 
@@ -196,7 +196,7 @@ spat_boxplot <- ggplot(spat_delta_Cq, aes(x = Target, y = delta_Cq, fill = treat
   geom_boxplot(position = position_dodge(width = 0.75)) +
   theme_minimal() +
   theme(legend.position = "right") +
-  labs(x = "Target", y = "Delta Cq") +
+  labs(x = "Target", y = "Delta Cq", title = "Spat") +
   annotate("text", x = t_test_results_with_max_delta_Cq$Target, # Adds asterisks
            y = t_test_results_with_max_delta_Cq$max_delta_Cq + 0.5, 
            label = t_test_results_with_max_delta_Cq$asterisk,
@@ -265,11 +265,10 @@ str(mean_Cq_df)
 ### Delta Cqs
 
 ```{r delta-Cqs-gene-level}
-# Calculate delta Cq
 combined_df_with_delta_Cq <- mean_Cq_df %>%
   group_by(life.stage, treatment) %>%
-  mutate(delta_Cq = mean_Cq - mean(mean_Cq[Target == "GAPDH"])) %>%
-  ungroup() %>% 
+  mutate(delta_Cq = mean_Cq - mean_Cq[Target == "GAPDH"]) %>%
+  ungroup() %>%
   filter(Target != "GAPDH")
 
 str(combined_df_with_delta_Cq)
@@ -281,7 +280,7 @@ str(combined_df_with_delta_Cq)
 # Calculate delta_delta_Cq
 delta_delta_Cq_df <- combined_df_with_delta_Cq %>%
   group_by(life.stage, Target) %>%
-  summarize(delta_delta_Cq = delta_Cq[treatment == "treated"] - delta_Cq[treatment == "control"])
+  summarize(delta_delta_Cq = delta_Cq[treatment == "control"] - delta_Cq[treatment == "treated"])
 
 str(delta_delta_Cq_df)
 
@@ -330,7 +329,7 @@ spat_fc_plot <- ggplot(spat_df, aes(x = Target, y = fold_change - 1)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +  # Baseline
   theme_minimal() +
   labs(x = "Target", y = "Fold Change", title = "Spat Life Stage Fold Change") +
-  scale_y_continuous(limits = c(-1, 8))
+  scale_y_continuous(limits = c(-1, 0.5))
 
 # Display plot
 spat_fc_plot
