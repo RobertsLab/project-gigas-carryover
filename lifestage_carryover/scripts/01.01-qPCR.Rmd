@@ -3,6 +3,8 @@ title: "Untitled"
 author: "Sam White"
 date: "2024-03-27"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Load libraries
@@ -43,7 +45,7 @@ calculate_delta_Cq <- function(df) {
 ## Read in files
 ```{r read-in-files}
 # Set the directory where your CSV files are located
-cqs_directory <- "../data/qPCR/Cq/"
+cqs_directory <- "lifestage_carryover/data/qPCR/Cq/"
 
 # Get a list of all CSV files in the directory with the naming structure "*Cq_Results.csv"
 cq_file_list <- list() # Initialize list
@@ -169,13 +171,16 @@ seed_boxplot <- ggplot(seed_delta_Cq_df, aes(x = Target, y = delta_Cq, fill = tr
   geom_boxplot(position = position_dodge(width = 0.75)) +
   theme_minimal() +
   theme(legend.position = "right") +
+  scale_fill_manual(values=c("darkgray", "salmon"))+
+  ylim(-2,10)+
   labs(x = "Target", y = "Delta Cq", title = "Seed") + 
-  annotate("text", x = t_test_results$Target, y = Inf, label = t_test_results$asterisk, # Adds asterisks
-           vjust = -0.5, size = 4, color = "orange")
+  annotate("text", x = t_test_results$Target, y = 8, label = t_test_results$asterisk, # Adds asterisks
+           vjust = -0.5, size = 8, color = "black")
 
 # Show box plot
 print(seed_boxplot)
 ```
+
 ### Spat
 ```{r box-plots-delta-Cq-spat}
 # Filter data for life.stage = "spat"
@@ -196,11 +201,13 @@ spat_boxplot <- ggplot(spat_delta_Cq, aes(x = Target, y = delta_Cq, fill = treat
   geom_boxplot(position = position_dodge(width = 0.75)) +
   theme_minimal() +
   theme(legend.position = "right") +
+  scale_fill_manual(values=c("darkgray", "salmon"))+
   labs(x = "Target", y = "Delta Cq", title = "Spat") +
+  ylim(-2, 10)+
   annotate("text", x = t_test_results_with_max_delta_Cq$Target, # Adds asterisks
-           y = t_test_results_with_max_delta_Cq$max_delta_Cq + 0.5, 
+           y = 8, 
            label = t_test_results_with_max_delta_Cq$asterisk,
-           vjust = -0.5, size = 10, color = "orange")
+           vjust = -0.5, size = 10, color = "black")
 
 # Show box plot
 print(spat_boxplot)
@@ -305,11 +312,15 @@ seed_df <- delta_delta_fold_change %>%
 # Create bar plot for seed life stage
 # Create the plot with fold changes relative to baseline of 1
 seed_fc_plot <- ggplot(seed_df, aes(x = Target, y = fold_change - 1)) +
-  geom_bar(stat = "identity", fill = "skyblue") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +  # Baseline
+  geom_bar(stat = "identity", fill = "white", color="black") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth=2) +  # Baseline
   theme_minimal() +
   labs(x = "Target", y = "Fold Change", title = "Seed Life Stage Fold Change") +
-  scale_y_continuous(limits = c(-0.5, 1))
+  scale_y_continuous(limits = c(-0.5, 1))+
+  
+  geom_text(aes(x=2, y=0.2, label="*"), color="black", size=10)+
+  geom_text(aes(x=5, y=0.2, label="*"), color="black", size=10)+
+  geom_text(aes(x=6, y=0.65, label="*"), color="black", size=10)
 
 # Display plot
 seed_fc_plot
@@ -325,12 +336,36 @@ spat_df <- delta_delta_fold_change %>%
 # Create bar plot for spat life stage
 # Create the plot with fold changes relative to baseline of 1
 spat_fc_plot <- ggplot(spat_df, aes(x = Target, y = fold_change - 1)) +
-  geom_bar(stat = "identity", fill = "salmon") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +  # Baseline
+  geom_bar(stat = "identity", fill = "white", color="black") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth=2) +  # Baseline
   theme_minimal() +
   labs(x = "Target", y = "Fold Change", title = "Spat Life Stage Fold Change") +
-  scale_y_continuous(limits = c(-1, 0.5))
+  scale_y_continuous(limits = c(-1, 0.5))+
+  
+  geom_text(aes(x=2, y=0.2, label="*"), color="black", size=10)+
+  geom_text(aes(x=5, y=0.2, label="*"), color="black", size=10)+
+  geom_text(aes(x=6, y=0.2, label="*"), color="black", size=10)
+  
 
 # Display plot
 spat_fc_plot
 ```
+
+# Generate panel plots
+
+Generate seed plot
+```{r}
+library(cowplot)
+
+seed_grid<-plot_grid(seed_boxplot, seed_fc_plot, ncol=2, nrow=1, align="vh", rel_widths=c(1,0.8))
+ggsave(plot=seed_grid, "lifestage_carryover/output/qPCR/seed_qPCR.jpeg", width=12, height=4)
+
+spat_grid<-plot_grid(spat_boxplot, spat_fc_plot, ncol=2, nrow=1, align="vh", rel_widths=c(1,0.8))
+ggsave(plot=spat_grid, "lifestage_carryover/output/qPCR/spat_qPCR.jpeg", width=12, height=4)
+
+```
+
+Generate spat plot
+
+```
+
