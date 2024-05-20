@@ -43,7 +43,7 @@ growth<-growth%>%
   select(tag, `life-stage`, `init-treat`, month, length.mm)%>%
   rename(lifestage=`life-stage`, treatment=`init-treat`)
 
-growth$month<-factor(growth$month, levels=c("Oct", "Nov", "Jan", "Feb", "March", "April"))
+growth$month<-factor(growth$month, levels=c("Oct", "Nov", "Jan", "Feb", "March", "April", "May"))
 ```
 
 ## Look at data for whole population together  
@@ -108,14 +108,14 @@ summary(model)
 ```
 
                             Df  Sum Sq Mean Sq  F value  Pr(>F)    
-lifestage                    3 1090468  363489 7860.265 < 2e-16 ***
-month                        5   12884    2577   55.720 < 2e-16 ***
-treatment                    1     260     260    5.626 0.01776 *  
-lifestage:month              6   21926    3654   79.023 < 2e-16 ***
-lifestage:treatment          3     528     176    3.804 0.00979 ** 
-month:treatment              5      27       5    0.117 0.98861    
-lifestage:month:treatment    6     203      34    0.731 0.62471    
-Residuals                 2781  128604      46      
+lifestage                    3 1187777  395926 9758.267 < 2e-16 ***
+month                        6   12889    2148   52.943 < 2e-16 ***
+treatment                    1     162     162    3.992 0.04580 *  
+lifestage:month              6   21932    3655   90.094 < 2e-16 ***
+lifestage:treatment          3     573     191    4.711 0.00277 ** 
+month:treatment              6     103      17    0.423 0.86429    
+lifestage:month:treatment    6     203      34    0.833 0.54413    
+Residuals                 3282  133162      41         
 
 Conduct posthoc test
 ```{r}
@@ -137,13 +137,11 @@ model<-growth%>%
 summary(model)
 ```
 
-                  Df Sum Sq Mean Sq F value  Pr(>F)    
-month              4    366   91.48   9.708 9.4e-08 ***
-treatment          1     64   63.86   6.777 0.00932 ** 
-month:treatment    4     28    7.11   0.755 0.55472    
-Residuals       1523  14352    9.42 
-
-For spat, there is a significant effect of treatment.  
+                  Df Sum Sq Mean Sq F value   Pr(>F)    
+month              5    371   74.18   7.939 2.03e-07 ***
+treatment          1     18   17.79   1.904   0.1678    
+month:treatment    5    104   20.85   2.232   0.0487 *  
+Residuals       2024  18910    9.34 
 
 Conduct post hoc tests. 
 
@@ -214,7 +212,8 @@ replicates<-growth%>%
   mutate(perc_growth_Nov=((Nov-Oct)/Oct)*100)%>%
   mutate(perc_growth_Jan=((Jan-Oct)/Oct)*100)%>%
   mutate(perc_growth_Feb=((Feb-Oct)/Oct)*100)%>%
-  mutate(perc_growth_April=((April-Oct)/Oct)*100)
+  mutate(perc_growth_April=((April-Oct)/Oct)*100)%>%
+  mutate(perc_growth_May=((May-Oct)/Oct)*100)
 ```
 
 ### Plot growth for adult animals sampled in November
@@ -492,6 +491,35 @@ ggsave(plot=plot11b, "lifestage_carryover/output/size/spat_April_percent_growth.
 ```
 
 
+
+### Plot growth for animals measured in May (spat only)
+
+Spat
+```{r}
+plot11c<-replicates%>%
+  select(treatment, lifestage, tag, perc_growth_May)%>%
+  filter(lifestage=="spat")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=treatment, x=treatment, y=perc_growth_May, shape=tag))+
+  #geom_line(aes(group=tag), color="black")+
+  geom_point(aes(group=interaction(treatment, lifestage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_shape_manual(name="Replicate", values=c(15, 16, 17, 18))+
+  ggtitle("Spat: Oct-May Growth")+
+  theme_classic()+
+  ylim(-10,15)+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot11c
+
+ggsave(plot=plot11c, "lifestage_carryover/output/size/spat_May_percent_growth.png", width=4, height=4)
+```
+
+
 ### Test for effect of treatment by lifestage 
 
 January all stages 
@@ -536,21 +564,6 @@ treatment            1    129     129   1.185    0.295
 lifestage            3  81243   27081 249.636 2.18e-12 ***
 treatment:lifestage  3   1683     561   5.172    0.013 *  
 Residuals           14   1519     108   
-
-
-April spat only (no model possible, only calculated with one replicate)
-
-```{r}
-model<-replicates%>%
-  select(treatment, lifestage, tag, perc_growth_April)%>%
-  filter(lifestage=="spat");model
-```
-
-  treatment lifestage tag        perc_growth_April
-  <chr>     <chr>     <chr>                  <dbl>
-1 control   spat      right-spat              3.79
-2 treatment spat      left-spat              -3.45
-
 
 
 ## Plot percent growth in only ambient treatment 
@@ -612,31 +625,32 @@ Load data for individual growth measurements
 individuals<-read_csv("lifestage_carryover/data/size/gigas-lengths-individuals.csv")
 
 individuals<-individuals%>%
-  select(!Date)%>%
-  select(!notes)
+  select(!Notes)
 
-individuals$month<-factor(individuals$month, levels=c("March", "April"))
 individuals$unique_id<-paste0(individuals$bag, "-", individuals$oyster)
 ```
 
-Calculate individual growth by calculating the percent change from March to April for each individual.  
+Calculate individual growth by calculating the percent change from April to May for each individual. We will not use March due too a caliper error.  
 
 ```{r}
 individuals_wide<-individuals%>%
-  pivot_wider(names_from="month", values_from="length.mm")%>%
-  mutate(perc_growth_April=((April-March)/March)*100)
+  mutate(perc_growth_May=((April-May)/April)*100)
+
+individuals_long<-individuals%>%
+  pivot_longer(names_to="month", values_to="length.mm", cols=c(March:May))
 ```
 
 # Plot and run anova models  
 
-Plot mean lengths for adults and seed. 
+Plot mean lengths for adults and seed. Remove March.  
 
 ```{r}
-plot_ind<-individuals%>%
+plot_ind<-individuals_long%>%
+  filter(!month=="March")%>%
   
   ggplot(aes(color=`init-treat`, x=month, y=length.mm))+
-  geom_point(position=position_dodge(0.7), size=1)+
-  geom_line(aes(group=unique_id), position=position_dodge(0.7))+
+  geom_point(size=1)+
+  geom_line(aes(group=unique_id))+
   facet_grid(~`life-stage`)+
   ylab("Length (mm)")+
   xlab("Month")+
@@ -652,10 +666,10 @@ ggsave(plot=plot_ind, "lifestage_carryover/output/size/individual_length_time.pn
 Plot adults by treatment and family with percent growth. 
 
 ```{r}
-plot_ind1<-individuals%>%
+plot_ind1<-individuals_wide%>%
   filter(`life-stage`=="adult")%>%
   
-  ggplot(aes(color=`init-treat`, x=tag, y=perc_growth_April))+
+  ggplot(aes(color=`init-treat`, x=tag, y=perc_growth_May))+
   geom_boxplot(fill=NA, outlier.shape=NA)+
   geom_point(position=position_dodge(0.7), size=1)+
   ylab("Growth (%)")+
@@ -672,14 +686,15 @@ ggsave(plot=plot_ind1, "lifestage_carryover/output/size/individual_growth_adults
 Plot seed by treatment with percent growth. 
 
 ```{r}
-plot_ind2<-individuals%>%
+plot_ind2<-individuals_wide%>%
   filter(`life-stage`=="seed")%>%
   
-  ggplot(aes(color=`init-treat`, x=`init-treat`, y=perc_growth_April))+
+  ggplot(aes(color=`init-treat`, x=`init-treat`, y=perc_growth_May))+
   geom_boxplot(fill=NA, outlier.shape=NA)+
   geom_point(position=position_dodge(0.7), size=1)+
   ylab("Growth (%)")+
   xlab("Treatment")+
+  ylim(-40,10)+
   scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
   theme_classic()+
   theme(
@@ -689,4 +704,27 @@ plot_ind2<-individuals%>%
 ggsave(plot=plot_ind2, "lifestage_carryover/output/size/individual_growth_seed.png", width=7, height=4)
 ```
 
-Need to get another set of growth measurements - something was off in seed measurements between March and April.  
+# Run ANOVA on individual growth 
+
+Adults 
+```{r}
+model<-individuals_wide%>%
+  filter(`life-stage`=="adult")%>%
+  
+  aov(perc_growth_May ~ `init-treat`, data=.)
+
+summary(model)
+```
+No difference in adults.  
+
+Seed 
+```{r}
+model<-individuals_wide%>%
+  filter(`life-stage`=="seed")%>%
+  
+  aov(perc_growth_May ~ `init-treat`, data=.)
+
+summary(model)
+```
+No difference in seed.    
+
