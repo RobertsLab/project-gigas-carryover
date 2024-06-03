@@ -1,0 +1,138 @@
+task: create a plot of growth data.
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+
+```
+
+```{r}
+# retrieve csv
+size_data <- read.csv("~/project-gigas-carryover/lifestage_carryover/data/size/gigas-lengths.csv")
+# filtering/grouping
+
+spat_data <- size_data[size_data$life.stage == "spat", ]
+seed_data <- size_data[size_data$life.stage == "seed", ]
+
+#getting R to read dates as dates
+
+size_data$dates <- as.Date(size_data$Date, format= "%m/%d/%Y")
+# specifying the order of months
+month_order <- c("Oct", "Nov", "Jan", "Feb")
+size_data$month <- factor(size_data$month, levels = month_order)
+
+```
+
+### Plotting sizes
+
+```{r}
+# separating adults
+no_adults <- subset(size_data, life.stage != "adult")
+adults_only <- subset(size_data, life.stage == "adult")
+
+
+# plotting...
+# no adults
+plot1 <- ggplot(no_adults, aes(colour= init.treat, x= month, y= length)) +
+    geom_boxplot()+
+    scale_color_manual(values = c("treatment" = "red3", "control" = "steelblue"), labels = c("Control", "Treated"))+
+    facet_grid(~life.stage)+
+    ggtitle("Growth")+
+    ylab("Length (mm)")+
+    xlab("Month")+
+    labs(colour = "Treatment")+
+    theme_minimal()+
+    theme(
+    text=element_text(size=12, color="black")
+  )
+
+plot1 +
+   annotate("text", x = t_test_results_with_max_delta_Cq$Target, 
+           y = t_test_results_with_max_delta_Cq$max_delta_Cq + 0.5, 
+           label = "*",
+           vjust = -0.5, size = 10, color = "orange")
+
+#ggsave(plot=plot1, "~/project-gigas-carryover/lifestage_carryover/output/size/EE_mean_no-adult_lengths_box.png", width=7, height=4)
+
+# adults
+plot2 <- ggplot(adults_only, aes(colour = init.treat, x= month, y= length)) + 
+    geom_boxplot(aes(colour = init.treat))+
+    scale_colour_manual(values = c("treatment" = "red3", "control" = "steelblue"), labels = c("Control", "Treated"))+
+    facet_grid(~tag)+
+    ggtitle("Growth")+
+    ylab("Length (mm)")+
+    xlab("Month")+
+    labs(colour = "Treatment")+
+    theme_minimal()+
+    theme(
+    text=element_text(size=12, color="black")
+  )
+
+plot2
+
+#ggsave(plot=plot2, "~/project-gigas-carryover/lifestage_carryover/output/size/EE_mean_adult_lengths_box.png", width=7, height=4)
+```
+
+### simple model / t-test
+
+```{r}
+mymodel <- aov(length~life.stage*month*init.treat, data=size_data)
+# model
+#summary(mymodel)
+# t-test treatment for spat
+size_spat_control <- size_data$length[size_data$init.treat == "control" & size_data$life.stage == "spat"]
+size_spat_treated <- size_data$length[size_data$init.treat == "treatment" & size_data$life.stage == "spat"]
+spat_t_test <- t.test(size_spat_control, size_spat_treated , alternative = c("two.sided"))
+
+#print(spat_t_test)
+
+
+
+size_spat_control_feb <- size_data$length[size_data$init.treat == "control" & size_data$life.stage == "spat" & size_data$month == "Feb"]
+size_spat_treated_feb <- size_data$length[size_data$init.treat == "treatment" & size_data$life.stage == "spat" & size_data$month == "Feb"]
+spat_t_test_feb <- t.test(size_spat_control_feb, size_spat_treated_feb , alternative = c("two.sided"))
+print(spat_t_test_feb)
+
+```
+significant lifestage and month effects. significant treatment effect on spat. 
+
+### calculate % growth
+```{r}
+replicates <- size_data%>%
+  group_by(init.treat, month, life.stage, tag)%>%
+  summarise(mean=mean(length, na.rm=TRUE))%>%
+  pivot_wider(names_from=month, values_from=mean)%>%
+  mutate(perc_growth_Nov=((Nov-Oct)/Oct)*100)%>%
+  mutate(perc_growth_Jan=((Jan-Oct)/Oct)*100)
+replicates
+```
+
+```{r}
+# plotting 
+plot7 <- replicates%>%
+  select(init.treat, life.stage, tag, perc_growth_Jan)%>%
+  filter(life.stage=="spat")%>%
+  drop_na()%>%
+  droplevels()%>%
+  
+  ggplot(aes(color=init.treat, x=init.treat, y=perc_growth_Jan, shape=tag))+
+  #geom_line(aes(group=tag), color="black")+
+  geom_point(aes(group=interaction(init.treat, life.stage)), position=position_dodge(0.3), size=5)+
+  ylab("% growth")+
+  xlab("Treatment")+
+  scale_color_manual(values=c("steelblue", "red3"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_shape_manual(name="Replicate", values=c(15, 16, 17, 18))+
+  ggtitle("Spat: Oct-Jan Growth")+
+  theme_minimal()+
+  ylim(0,150)+
+  theme(
+    text=element_text(size=12, color="black")
+  )
+plot7
+```
+### t-tests
+
+```{r}
+t.test()
+
+```

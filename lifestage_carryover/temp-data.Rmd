@@ -1,0 +1,61 @@
+---
+title: "temp-data"
+output: html_document
+date: "2024-04-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+getwd()
+#setwd("~/project-gigas-carryover/lifestage-carryover")
+```
+
+### Temperature Data
+
+```{r}
+# load libraries
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+
+# retrieve csvs
+treated_temp_data <- read.csv("~/project-gigas-carryover/lifestage_carryover/data/loggers/Tank_4_treated_20240201.csv")
+control_temp_data <- read.csv("~/project-gigas-carryover/lifestage_carryover/data/loggers/Tank_3_control_20240201.csv")
+
+# rename columns
+new_column_names <- c("X", "dateTime", "temp", "intensity", "couplerDetached", "couplerAttached", "HostConnected", "stopped", "endOfFile")
+colnames(treated_temp_data) <- new_column_names
+colnames(control_temp_data) <- new_column_names
+
+# add a grouping variable to distinguish between the datasets
+treated_temp_data$treatment <- "treated"
+control_temp_data$treatment <- "control"
+# combine the datasets
+combined_data <- rbind(treated_temp_data, control_temp_data)
+
+# convert 'dateTime' column to proper date-time object
+combined_data$dateTime <- mdy_hms(combined_data$dateTime) # dateTime is in "YYYY-MM-DD HH:MM:SS" format
+# create separate columns for date and time
+combined_data$date <- date(combined_data$dateTime)
+combined_data$time <- format(combined_data$dateTime, "%H:%M:%S")
+
+new_data <- filter(combined_data, date != "2024-02-01" & date != "2024-01-31")
+
+tail(new_data)
+
+
+# Plot
+ggplot(new_data, aes(x= dateTime, y= temp, colour = treatment))+
+  geom_line()+
+  scale_color_manual(values = c("treated" = "red3", "control" = "steelblue"), labels = c("Control", "Treated"))+
+  labs(title = "Water Temperature",
+       x = "Date", y = "Temperature ºC",
+       color = "Treatment")+
+  theme_minimal()
+
+#get avg
+
+median(treated_temp_data$temp)
+
+```
