@@ -1,8 +1,5 @@
 # Planning for Survivorship measurements 
 
-**This post is in progress, I am actively writing this post - check back soon for full content!**  
-
-
 Experimental design and project planning notes for lifestage carry over project survival analysis.  
 
 ## Question of interest and hypothesis
