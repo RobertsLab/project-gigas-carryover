@@ -1,13 +1,13 @@
 # Resazurin-assay
 
 1. **Plate oysters (1/well; if testing in 2-3 mm spat one can use a 96 well plate and 300 ul of assay media. If using larger oysters you can use a 48 well plate and 1 mL of assay media.)**  
-   When you plate them you can do so in water with antibiotics and fungizone. Weigh oysters as you plate them so you can correct for weight. Alternatively, plate them, take a picture and measure area using image J.
-   - **Water: (Volume/100 mL)**
-     1. Sterile water with appropriate Salinity – 98 mL (Sterile Filter or Autoclave)
+   When you plate them you can do so in _seawater_ with antibiotics and fungizone. Weigh oysters as you plate them so you can correct for weight. Alternatively, plate them, take a picture and measure area using image J.
+   - **_Seawater_: (Volume/100 mL)**
+     1. Sterile _seawater_ with appropriate Salinity – 98 mL (Sterile Filter or Autoclave)
      2. 100X Penn/Strep – 1 mL
      3. 100X Fungizone – 1 mL
 
-2. **Allow oysters to be in Antibiotic/Fungizone Water for at least 1 h**
+2. **Allow oysters to be in Antibiotic/Fungizone _seawater_ for at least 1 h**
 
 3. **Make Resazurin Stock Solution (This can be frozen; 50 mg/ml)**
    - 0.5 g of resazurin sodium salt (Sigma-Aldrich Corp., St. Louis, MO)
@@ -15,7 +15,7 @@
    - 10 μL of dimethyl sulfoxide (0.1% DMSO, Sigma-Aldrich Corp., St. Louis, MO)
 
 4. **Make Assay Media**
-   - Sterile water with appropriate Salinity – 96.9 mL (Sterile Filter or Autoclave)
+   - Sterile _seawater_ with appropriate Salinity – 96.9 mL (Sterile Filter or Autoclave)
    - Resazurin Stock Solution – 1 mL (This can be replaced with AlamarBlue, which is used at 1.6%)
    - 100X Penn/Strep – 1 mL
    - 100X Fungizone – 1 mL
