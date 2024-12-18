@@ -24,14 +24,15 @@ bibliography: references.bib
 link-citations: true
 ---
 
-## Load libraries
+# Load libraries
 ```{r load-libraries}
 library("tidyverse")
 library("ggplot2")
 ```
 
-## Set variables
+# Set variables
 
+## Set sample groups
 ```{r set-sample-groups}
 seed.control=c("223", "243", "244")
 seed.treated=c("200", "257", "285")
@@ -46,15 +47,24 @@ adult.control.high=c("20", "23", "26", "32", "33", "67", "70", "90", "107", "132
 adult.treated.ambient=c("7", "31", "35", "37", "41", "54", "84", "100", "112", "116", "118", "133", "154", "199", "203", "204", "208", "219", "294", "318", "339", "353", "363", "378")
 adult.treated.high=c("21", "22", "45", "82", "85", "91", "95", "99", "103", "108", "117", "127", "165", "185", "190", "196", "232", "237", "245", "263", "276", "306", "343", "374")
 
-# Combine vectors into a list
-vector_list <- list(seed.control = seed.control,
+# Combine vectors into lists
+# Used for adding treatment info and/or subsetting downstream
+seed.spat_vector_list <- list(seed.control = seed.control,
                     seed.treated = seed.treated,
                     spat.control = spat.control,
                     spat.treated = spat.treated)
+
+adult.juvenile_vector_list <- list(juvenile.control.ambient = juvenile.control.ambient,
+                                   juvenile.control.high = juvenile.control.high,
+                                   juvenile.treated.ambient = juvenile.treated.ambient,
+                                   juvenile.treated.high = juvenile.treated.high,
+                                   adult.control.ambient = adult.control.ambient,
+                                   adult.control.high = adult.control.high,
+                                   adult.treated.high = adult.treated.high)
 ```
 
 
-## Functions
+# Functions
 ```{r function-delta-Cq}
 calculate_delta_Cq <- function(df) {
   df <- df %>%
@@ -66,11 +76,11 @@ calculate_delta_Cq <- function(df) {
 }
 ```
 
-
-## Read in files
+## SEED AND SPAT ANALYSIS
+### Read in files
 ```{r read-in-files}
 # Set the directory where your CSV files are located
-cqs_directory <- "lifestage_carryover/data/qPCR/Cq/"
+cqs_directory <- "lifestage_carryover/data/qPCR/Cq"
 
 # Get a list of all CSV files in the directory with the naming structure "*Cq_Results.csv"
 cq_file_list <- list() # Initialize list
@@ -96,7 +106,7 @@ str(combined_df)
 
 ```
 
-## Unique samples by target
+### Unique samples by target
 ```{r unqique-samples-by-target}
 # Group by Sample and Target, then summarize to get unique rows for each sample
 aggregated_df <- combined_df %>%
@@ -107,7 +117,7 @@ aggregated_df <- combined_df %>%
 str(aggregated_df)
 ```
 
-## Add life stage and treatment cols
+### Add life stage and treatment cols
 ```{r add-cols}
 # Initialize new columns
 aggregated_df <- aggregated_df %>%
@@ -115,8 +125,8 @@ aggregated_df <- aggregated_df %>%
          treatment = NA_character_)
 
 # Loop through each vector
-for (vec_name in names(vector_list)) {
-  vec <- vector_list[[vec_name]]
+for (vec_name in names(seed.spat_vector_list)) {
+  vec <- seed.spat_vector_list[[vec_name]]
   stage <- strsplit(vec_name, "\\.")[[1]][1]
   treatment <- strsplit(vec_name, "\\.")[[1]][2]
   
@@ -137,7 +147,7 @@ str(aggregated_df)
 
 ```
 
-## Delta Cq to Normalizing Gene
+### Delta Cq to Normalizing Gene
 ```{r delta-Cq}
 # Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
 delta_Cq_df <- calculate_delta_Cq(aggregated_df)
@@ -146,7 +156,7 @@ str(delta_Cq_df)
 ```
 
 
-## T-tests
+### T-tests
 ```{r t-tests}
 # Filter out groups with missing life.stage or Target
 # Caused by NTCs
@@ -178,11 +188,11 @@ t_test_results$asterisk <- ifelse(t_test_results$p_value <= 0.05, "*", "")
 str(t_test_results)
 ```
 
-# Plotting
+### Plotting
 
-## Delta Cq Box Plots
+#### Delta Cq Box Plots
 
-### Seed
+##### Seed
 
 ```{r box-plots-seed-delta-Cq}
 library(ggplot2)
@@ -206,7 +216,7 @@ seed_boxplot <- ggplot(seed_delta_Cq_df, aes(x = Target, y = delta_Cq, fill = tr
 print(seed_boxplot)
 ```
 
-### Spat
+##### Spat
 ```{r box-plots-delta-Cq-spat}
 # Filter data for life.stage = "spat"
 spat_delta_Cq <- delta_Cq_df_filtered %>%
@@ -238,9 +248,9 @@ spat_boxplot <- ggplot(spat_delta_Cq, aes(x = Target, y = delta_Cq, fill = treat
 print(spat_boxplot)
 ```
 
-## Delta delta Cq
+### Delta delta Cq
 
-### Add treatment and life stage
+#### Add treatment and life stage
 
 ```{r add-treatment-lifestage}
 # Initialize empty vectors to store life.stage and treatment
@@ -253,8 +263,8 @@ for (i in 1:nrow(combined_df)) {
   
   # Check if the sample_id is present in any of the vectors
   found <- FALSE
-  for (vec_name in names(vector_list)) {
-    if (sample_id %in% vector_list[[vec_name]]) {
+  for (vec_name in names(seed.spat_vector_list)) {
+    if (sample_id %in% seed.spat_vector_list[[vec_name]]) {
       # If present, extract life.stage and treatment from the vector name
       parts <- strsplit(vec_name, "\\.")[[1]]
       life_stage[i] <- parts[1]
@@ -284,7 +294,7 @@ str(combined_df_filtered)
 ```
 
 
-### Mean Cqs per gene per treatment per life stage
+#### Mean Cqs per gene per treatment per life stage
 ```{r mean-Cqs}
 # Group by life.stage, treatment, and Target, then calculate the mean Cq
 mean_Cq_df <- combined_df_filtered %>%
@@ -294,7 +304,7 @@ mean_Cq_df <- combined_df_filtered %>%
 str(mean_Cq_df)
 ```
 
-### Delta Cqs
+#### Delta Cqs
 
 ```{r delta-Cqs-gene-level}
 combined_df_with_delta_Cq <- mean_Cq_df %>%
@@ -306,7 +316,7 @@ combined_df_with_delta_Cq <- mean_Cq_df %>%
 str(combined_df_with_delta_Cq)
 ```
 
-### Delta delta Cq
+#### Delta delta Cq
 
 ```{r delta-delta-Cq}
 # Calculate delta_delta_Cq
@@ -318,7 +328,7 @@ str(delta_delta_Cq_df)
 
 ```
 
-### Calculate the fold change for each Target
+#### Calculate the fold change for each Target
 ```{r fold-change}
 delta_delta_fold_change <- delta_delta_Cq_df %>%
   mutate(fold_change = 2^(-delta_delta_Cq)) %>% 
