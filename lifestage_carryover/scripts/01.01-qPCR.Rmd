@@ -1,10 +1,27 @@
 ---
-title: "Untitled"
+title: "01.01-qPCR"
 author: "Sam White"
 date: "2024-03-27"
-output: html_document
-editor_options: 
-  chunk_output_type: console
+output: 
+  bookdown::html_document2:
+    theme: cosmo
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    code_download: true
+  github_document:
+    toc: true
+    number_sections: true
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    code_download: true
+bibliography: references.bib
+link-citations: true
 ---
 
 ## Load libraries
