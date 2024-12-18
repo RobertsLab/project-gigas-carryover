@@ -431,6 +431,10 @@ str(adult.juv.combined_df)
 
 ### Replace target names
 ```{r replace-target-names}
+# Remove rows with Sample name "NTC"
+adult.juv.combined_df <- adult.juv.combined_df[adult.juv.combined_df$Sample != "NTC", ]
+
+
 # Replace values in the Target column
 adult.juv.combined_df$Target <- gsub("Cg_GAPDH_205_F-355_R \\(SR IDs: 1172/3\\)", "GAPDH", adult.juv.combined_df$Target)
 
@@ -451,6 +455,18 @@ adult.juv.combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIP
 str(adult.juv.combined_df)
 ```
 
+### Identify Samples with Cq.Std..Dev > 0.5
+```{r filter-cq-std-dev}
+# Filter out rows where Cq.Std..Dev is NA
+adult.juv.combined_df <- adult.juv.combined_df[!is.na(adult.juv.combined_df$Cq.Std..Dev), ]
+
+# Filter rows where Cq.Std..Dev is greater than 0.5
+adult.juv.high_cq_std_dev <- adult.juv.combined_df[adult.juv.combined_df$Cq.Std..Dev > 0.5, ]
+
+# Print the filtered rows with specified columns, without row names
+print(adult.juv.high_cq_std_dev[, c("Target", "Sample", "Cq", "Cq.Std..Dev")], row.names = FALSE)
+```
+
 ### Unique samples by target
 ```{r unqique-samples-by-target}
 # Group by Sample and Target, then summarize to get unique rows for each sample
@@ -460,5 +476,16 @@ adult.juv.aggregated_df <- adult.juv.combined_df %>%
   ungroup()
 
 str(adult.juv.aggregated_df)
+```
+
+```{r}
+
+# Group by Sample and Target, then filter out the outlier replicate
+filtered_df <- adult.juv.combined_df %>%
+  group_by(Sample, Target) %>%
+  filter(abs(Cq - mean(Cq)) <= Cq.Std..Dev)
+
+# Print the filtered data frame
+print(filtered_df)
 ```
 
