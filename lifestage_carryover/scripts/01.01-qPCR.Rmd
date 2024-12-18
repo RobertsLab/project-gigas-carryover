@@ -438,25 +438,27 @@ adult.juv.combined_df$Target <- gsub("Cg_ATPsynthase_F/R \\(SR IDs: 1385/6\\)", 
 
 adult.juv.combined_df$Target <- gsub("Cg_cGAS \\(SR IDs: 1826/7\\)", "cGAS", adult.juv.combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_citrate_synthase (SR IDs: 1383/4)", "citrate.sythase", adult.juv.combined_df$Target)
+adult.juv.combined_df$Target <- gsub("Cg_citrate_synthase \\(SR IDs: 1383/4\\)", "citrate.sythase", adult.juv.combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_DNMT1_F (SR IDs: 1510/1)", "DNMT1", adult.juv.combined_df$Target)
+adult.juv.combined_df$Target <- gsub("Cg_DNMT1_F \\(SR IDs: 1510/1\\)", "DNMT1", adult.juv.combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_HSP70_F/R (SR IDs: 598/9)", "HSP70", adult.juv.combined_df$Target)
+adult.juv.combined_df$Target <- gsub("Cg_HSP70_F/R \\(SR IDs: 598/9\\)", "HSP70", adult.juv.combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_Hsp90_F/R (SR IDs: 1532/3)", "HSP90", adult.juv.combined_df$Target)
+adult.juv.combined_df$Target <- gsub("Cg_Hsp90_F/R \\(SR IDs: 1532/3\\)", "HSP90", adult.juv.combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_VIPERIN_F/R (SR IDs: 1828/9)", "VIPERIN", adult.juv.combined_df$Target)
+adult.juv.combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIPERIN", adult.juv.combined_df$Target)
+
+str(adult.juv.combined_df)
 ```
 
 ### Unique samples by target
 ```{r unqique-samples-by-target}
 # Group by Sample and Target, then summarize to get unique rows for each sample
-aggregated_df <- combined_df %>%
+adult.juv.aggregated_df <- adult.juv.combined_df %>%
   group_by(Sample, Target) %>%
   summarize(Cq.Mean = mean(Cq.Mean, na.rm = TRUE)) %>%
   ungroup()
 
-str(aggregated_df)
+str(adult.juv.aggregated_df)
 ```
 
