@@ -230,6 +230,15 @@ str(delta_Cq_df)
 
 ## Life Stages
 
+This code does the following:
+
+1. Extracts the unique life.stage levels from the data frame.
+2. Generates all possible pairs of life.stage levels using the combn function.
+3. Iterates over each pair and performs the t-test for each Target. Adds an
+asterisk column and an asterisk if the p-value is <= 0.05. Useful for downstream
+parsing.
+4. Stores the results in a list and combines them into a single data frame.
+5. Adds a comparison column to indicate which life.stage levels were compared.
 
 ```{r life-stage-t-tests}
 # Extract unique life.stage levels
@@ -278,7 +287,9 @@ This code does the following:
 1. Extracts the unique life.stage levels from the data frame.
 2. For each life.stage, extracts the unique conditioning.treatment levels.
 3. Generates all possible pairs of conditioning.treatment levels within each life.stage.
-4. Iterates over each pair and performs the t-test for each Target.
+4. Iterates over each pair and performs the t-test for each Target. Adds an
+asterisk column and an asterisk if the p-value is <= 0.05. Useful for downstream
+parsing.
 5. Stores the results in a list and combines them into a single data frame.
 6. Adds a comparison column to indicate which life.stage and conditioning.treatment levels were compared.
 
@@ -329,6 +340,17 @@ print(conditioning_treatment_t_test_results_df)
 
 
 ## Acute treatments
+
+This code does the following:
+
+1. Extracts the unique life.stage levels from the data frame.
+2. For each life.stage, extracts the unique acute.treatment levels.
+3. Generates all possible pairs of acute.treatment levels within each life.stage.
+4. Iterates over each pair and performs the t-test for each Target. Adds an
+asterisk column and an asterisk if the p-value is <= 0.05. Useful for downstream
+parsing.
+5. Stores the results in a list and combines them into a single data frame.
+6. Adds a comparison column to indicate which life.stage and acute.treatment levels were compared.
 
 Excludes `seed` and `spat`, as these were only held at `ambient` for the acute treatment.
 ```{r acute-treatments-life-stages}
@@ -382,6 +404,7 @@ print(acute_treatment_t_test_results_df)
 ```
 
 
+---
 
 # PRELIMINARY ANALYSIS
 
