@@ -99,7 +99,7 @@ calculate_delta_Cq <- function(df) {
 ## Create delta Cq boxplots
 ```{r function-delta-Cq-boxplots}
 # Function to create box plots for each comparison
-create_boxplot <- function(data, comparison, t_test_results) {
+create_boxplot_delta_Cq <- function(data, comparison, t_test_results) {
   # Extract life stages from comparison
   life_stages <- unlist(strsplit(comparison, "\\."))
 
@@ -128,7 +128,7 @@ create_boxplot <- function(data, comparison, t_test_results) {
 
   # Filter t_test_results for the current comparison
   t_test_results_filtered <- t_test_results %>%
-    filter(comparison == comparison)
+    filter(comparison == !!comparison)
 
   # Debugging: Print filtered t_test_results
   print("Filtered t_test_results:")
@@ -142,7 +142,6 @@ create_boxplot <- function(data, comparison, t_test_results) {
   print("t_test_results_with_asterisks:")
   print(t_test_results_with_asterisks)
 
-  # Format the title
   formatted_title <- paste0(toupper(substring(life_stages[1], 1, 1)), substring(life_stages[1], 2), 
                             " vs. ", 
                             toupper(substring(life_stages[2], 1, 1)), substring(life_stages[2], 2))
@@ -483,7 +482,7 @@ print(acute_treatment_t_test_results_df)
 unique_comparisons <- unique(life_stage_t_test_results_df$comparison)
 
 for (comparison in unique_comparisons) {
-  create_boxplot(delta_Cq_df, comparison, life_stage_t_test_results_df)
+  create_boxplot_delta_Cq(delta_Cq_df, comparison, life_stage_t_test_results_df)
 }
 ```
 
