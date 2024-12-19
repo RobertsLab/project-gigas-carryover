@@ -83,6 +83,8 @@ groups_list <- list(juvenile.control.ambient = juvenile.control.ambient,
 ```
 
 # Functions
+
+## Calculate delta Cq
 ```{r function-delta-Cq}
 calculate_delta_Cq <- function(df) {
   df <- df %>%
@@ -91,6 +93,73 @@ calculate_delta_Cq <- function(df) {
     ungroup()
   
   return(df)
+}
+```
+
+## Create delta Cq boxplots
+```{r function-delta-Cq-boxplots}
+# Function to create box plots for each comparison
+create_boxplot <- function(data, comparison, t_test_results) {
+  # Extract life stages from comparison
+  life_stages <- unlist(strsplit(comparison, "\\."))
+
+  # Debugging: Print life stages
+  print(paste("Life stages for comparison:", comparison))
+  print(life_stages)
+
+  # Filter data for the relevant life stages
+  filtered_data <- data %>%
+    filter(life.stage %in% life_stages)
+
+  # Debugging: Print filtered data
+  print("Filtered data:")
+  print(filtered_data)
+
+  # Check if both life stages are included
+  if (!all(life_stages %in% unique(filtered_data$life.stage))) {
+    stop("Not all life stages are included in the filtered data")
+  }
+
+  y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
+
+  # Debugging: Print y_limits
+  print("Y limits:")
+  print(y_limits)
+
+  # Filter t_test_results for the current comparison
+  t_test_results_filtered <- t_test_results %>%
+    filter(comparison == comparison)
+
+  # Debugging: Print filtered t_test_results
+  print("Filtered t_test_results:")
+  print(t_test_results_filtered)
+
+  # Filter t_test_results for asterisks
+  t_test_results_with_asterisks <- t_test_results_filtered %>%
+    filter(asterisk != "")
+
+  # Debugging: Print t_test_results_with_asterisks
+  print("t_test_results_with_asterisks:")
+  print(t_test_results_with_asterisks)
+
+  # Format the title
+  formatted_title <- paste0(toupper(substring(life_stages[1], 1, 1)), substring(life_stages[1], 2), 
+                            " vs. ", 
+                            toupper(substring(life_stages[2], 1, 1)), substring(life_stages[2], 2))
+
+  boxplot <- ggplot(filtered_data, aes(x = Target, y = delta_Cq, fill = life.stage)) +
+    geom_boxplot(position = position_dodge(width = 0.75)) +
+    theme_minimal() +
+    theme(legend.position = "right") +
+    scale_fill_manual(values=c("darkgray", "salmon", "lightblue", "lightgreen")) +
+    ylim(y_limits) +
+    labs(x = "Target", y = "Delta Cq", title = formatted_title) +
+    # Highlighted section: Adds asterisks
+    geom_text(data = t_test_results_with_asterisks, 
+              aes(x = Target, y = y_limits[2] - 1, label = asterisk), 
+              vjust = -0.5, size = 8, color = "black", inherit.aes = FALSE)
+
+  print(boxplot)
 }
 ```
 
@@ -408,70 +477,8 @@ print(acute_treatment_t_test_results_df)
 
 # Plotting
 
-```{r}
-# Load necessary libraries
-library(ggplot2)
-library(dplyr)
-
-# Function to create box plots for each comparison
-create_boxplot <- function(data, comparison, t_test_results) {
-  # Extract life stages from comparison
-  life_stages <- unlist(strsplit(comparison, "\\."))
-
-  # Debugging: Print life stages
-  print(paste("Life stages for comparison:", comparison))
-  print(life_stages)
-
-  # Filter data for the relevant life stages
-  filtered_data <- data %>%
-    filter(life.stage %in% life_stages)
-
-  # Debugging: Print filtered data
-  print("Filtered data:")
-  print(filtered_data)
-
-  # Check if both life stages are included
-  if (!all(life_stages %in% unique(filtered_data$life.stage))) {
-    stop("Not all life stages are included in the filtered data")
-  }
-
-  y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
-
-  # Debugging: Print y_limits
-  print("Y limits:")
-  print(y_limits)
-
-  # Filter t_test_results for the current comparison
-  t_test_results_filtered <- t_test_results %>%
-    filter(comparison == !!comparison)
-
-  # Debugging: Print filtered t_test_results
-  print("Filtered t_test_results:")
-  print(t_test_results_filtered)
-
-  # Filter t_test_results for asterisks
-  t_test_results_with_asterisks <- t_test_results_filtered %>%
-    filter(asterisk != "")
-
-  # Debugging: Print t_test_results_with_asterisks
-  print("t_test_results_with_asterisks:")
-  print(t_test_results_with_asterisks)
-
-  boxplot <- ggplot(filtered_data, aes(x = Target, y = delta_Cq, fill = life.stage)) +
-    geom_boxplot(position = position_dodge(width = 0.75)) +
-    theme_minimal() +
-    theme(legend.position = "right") +
-    scale_fill_manual(values=c("darkgray", "salmon", "lightblue", "lightgreen")) +
-    ylim(y_limits) +
-    labs(x = "Target", y = "Delta Cq", title = comparison) +
-    # Highlighted section: Adds asterisks
-    geom_text(data = t_test_results_with_asterisks, 
-              aes(x = Target, y = y_limits[2] - 1, label = asterisk), 
-              vjust = -0.5, size = 8, color = "black", inherit.aes = FALSE)
-
-  print(boxplot)
-}
-
+## Delta Cq boxplots
+```{r delta-Cq-boxplots}
 # Create box plots for each comparison
 unique_comparisons <- unique(life_stage_t_test_results_df$comparison)
 
