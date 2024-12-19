@@ -33,6 +33,12 @@ library("ggplot2")
 # Set variables
 
 ## Set sample groups
+
+Groups are named in the following fashion:
+
+`<life.stage>.<conditioning.treatment>.<acute.treatment>`
+
+This allows for parsing downstream.
 ```{r set-sample-groups}
 
 seed.control.ambient=c("29", "40", "55", "63", "69", "101", "119", "122", "155", "164", "187", "202", "209", "214", "233", "236", "275")
@@ -220,21 +226,9 @@ delta_Cq_df <- calculate_delta_Cq(grouped_df)
 str(delta_Cq_df)
 ```
 
-
-```{r}
-# View the levels of life.stage for each Target
-life_stage_levels <- delta_Cq_df %>%
-  group_by(Target, life.stage) %>%
-  summarise(levels = list(unique(life.stage))) %>%
-  ungroup()
-
-print(n = 32, life_stage_levels)
-```
-
 # t-tests
 
 ## Life Stages
-
 
 
 ```{r life-stage-t-tests}
@@ -332,6 +326,61 @@ conditioning_treatment_t_test_results_df <- bind_rows(conditioning_treatment_t_t
 # View the results
 print(conditioning_treatment_t_test_results_df)
 ```
+
+
+## Acute treatments
+
+Excludes `seed` and `spat`, as these were only held at `ambient` for the acute treatment.
+```{r acute-treatments-life-stages}
+# Extract unique life.stage levels, excluding 'seed' and 'spat'
+unique_life_stages <- unique(delta_Cq_df$life.stage)
+unique_life_stages <- setdiff(unique_life_stages, c("seed", "spat"))
+
+# Initialize a list to store results
+acute_treatment_t_test_results_list <- list()
+
+for (stage in unique_life_stages) {
+  # Extract unique acute.treatment levels within the current life.stage
+  unique_treatments <- unique(delta_Cq_df %>% filter(life.stage == stage) %>% pull(acute.treatment))
+  
+  # Check if there are at least 2 unique treatments
+  if (length(unique_treatments) >= 2) {
+    # Generate all possible pairs of acute.treatment levels
+    treatment_pairs <- combn(unique_treatments, 2, simplify = FALSE)
+    
+    for (pair in treatment_pairs) {
+      treatment1 <- pair[1]
+      treatment2 <- pair[2]
+      
+      # Perform t-test for each Target comparing the two acute.treatment levels within the current life.stage
+      t_test_results <- delta_Cq_df %>%
+        filter(life.stage == stage, acute.treatment %in% c(treatment1, treatment2)) %>%
+        group_by(Target) %>%
+        summarise(
+          t_test_result = list(t.test(delta_Cq ~ acute.treatment))
+        ) %>%
+        ungroup() %>%
+        mutate(
+          estimate_diff = sapply(t_test_result, function(x) x$estimate[1] - x$estimate[2]),
+          p_value = sapply(t_test_result, function(x) x$p.value),
+          asterisk = ifelse(p_value <= 0.05, "*", ""), # Adds asterisk column and asterisk for p-value.
+          comparison = paste(stage, treatment1, "vs", treatment2, sep = ".")
+        ) %>%
+        select(!t_test_result)
+      
+      acute_treatment_t_test_results_list[[paste(stage, treatment1, treatment2, sep = ".")]] <- t_test_results
+    }
+  }
+}
+
+# Combine results into a single data frame
+acute_treatment_t_test_results_df <- bind_rows(acute_treatment_t_test_results_list, .id = "comparison")
+
+# View the results
+print(acute_treatment_t_test_results_df)
+
+```
+
 
 
 # PRELIMINARY ANALYSIS
