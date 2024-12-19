@@ -489,5 +489,45 @@ adult.juv.aggregated_df <- adult.juv.combined.filtered_df %>%
 str(adult.juv.aggregated_df)
 ```
 
+### Add life stage and treatment cols
+```{r adult-juv-add-cols}
+# Initialize new columns
+adult.juv.aggregated_df <- adult.juv.aggregated_df %>%
+  mutate(life.stage = NA_character_,
+         conditioning.treatment = NA_character_,
+         acute.treatment = NA_character_)
+
+# Loop through each vector
+for (vec_name in names(adult.juvenile_vector_list)) {
+  vec <- adult.juvenile_vector_list[[vec_name]]
+  stage <- strsplit(vec_name, "\\.")[[1]][1]
+  conditioning_treatment <- strsplit(vec_name, "\\.")[[1]][2]
+  acute_treatment <- strsplit(vec_name, "\\.")[[1]][3]
+  
+  # Loop through each row in adult.juv.aggregated_df
+  for (i in 1:nrow(adult.juv.aggregated_df)) {
+    sample <- adult.juv.aggregated_df$Sample[i]
+    
+    # Check if sample is in the vector
+    if (sample %in% vec) {
+      # Update life.stage and treatment columns
+      adult.juv.aggregated_df$life.stage[i] <- stage
+      adult.juv.aggregated_df$conditioning.treatment[i] <- conditioning_treatment
+      adult.juv.aggregated_df$acute.treatment[i] <-acute_treatment
+    }
+  }
+}
+
+str(adult.juv.aggregated_df)
+
+```
+
+### Delta Cq to Normalizing Gene
+```{r adult-juv-delta-Cq}
+# Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
+delta_Cq_df <- calculate_delta_Cq(adult.juv.aggregated_df)
+
+str(delta_Cq_df)
+```
 
 
