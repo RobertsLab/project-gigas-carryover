@@ -52,15 +52,19 @@ adult.control.high=c("20", "23", "26", "32", "33", "67", "70", "90", "107", "132
 adult.treated.ambient=c("7", "31", "35", "37", "41", "54", "84", "100", "112", "116", "118", "133", "154", "199", "203", "204", "208", "219", "294", "318", "339", "353", "363", "378")
 adult.treated.high=c("21", "22", "45", "82", "85", "91", "95", "99", "103", "108", "117", "127", "165", "185", "190", "196", "232", "237", "245", "263", "276", "306", "343", "374")
 
+```
+
+```{r assign-groups-to-list}
 # Combine vectors into lists
 # Used for adding treatment info and/or subsetting downstream
 
-adult.juvenile_vector_list <- list(juvenile.control.ambient = juvenile.control.ambient,
+groups_list <- list(juvenile.control.ambient = juvenile.control.ambient,
                                    juvenile.control.high = juvenile.control.high,
                                    juvenile.treated.ambient = juvenile.treated.ambient,
                                    juvenile.treated.high = juvenile.treated.high,
                                    adult.control.ambient = adult.control.ambient,
                                    adult.control.high = adult.control.high,
+                                   adult.treated.ambient = adult.treated.ambient,
                                    adult.treated.high = adult.treated.high,
                                    seed.control.ambient = seed.control.ambient,
                                    seed.control.high = seed.control.high,
@@ -85,28 +89,28 @@ calculate_delta_Cq <- function(df) {
 ```
 
 # Read in files
-```{r read-in-adult-juv-files}
+```{r read-in-Cq-files}
 # Set the directory where your CSV files are located
 cqs_directory <- "lifestage_carryover/data/qPCR/Cq"
 
 # Get a list of all CSV files in the directory with the naming structure "*Cq-Results.csv"
-adult.juv.cq_file_list <- list() # Initialize list
-adult.juv.cq_file_list <- list.files(path = cqs_directory, pattern = "Cq-Results\\.csv$", full.names = TRUE)
+cq_file_list <- list() # Initialize list
+cq_file_list <- list.files(path = cqs_directory, pattern = "Cq-Results\\.csv$", full.names = TRUE)
 
 # Initialize an empty list to store the data frames
-adult.juv.data_frames <- list()
+data_frames_list <- list()
 
 # Loop through each file and read it into a data frame, then add it to the list
-for (file in adult.juv.cq_file_list) {
+for (file in cq_file_list) {
   data <- read.csv(file, header = TRUE)
   data$Sample <- as.character(data$Sample)  # Convert Sample column to character type
-  adult.juv.data_frames[[file]] <- data
+  data_frames_list[[file]] <- data
 }
 
 # Combine all data frames into a single data frame
-adult.juv.combined_df <- bind_rows(adult.juv.data_frames, .id = "data_frame_id")
+combined_df <- bind_rows(data_frames_list, .id = "data_frame_id")
 
-str(adult.juv.combined_df)
+str(combined_df)
 
 ```
 
@@ -116,102 +120,102 @@ str(adult.juv.combined_df)
 ## Replace target names
 ```{r replace-target-names}
 # Remove rows with Sample name "NTC"
-adult.juv.combined_df <- adult.juv.combined_df[adult.juv.combined_df$Sample != "NTC", ]
+combined_df <- combined_df[combined_df$Sample != "NTC", ]
 
 
 # Replace values in the Target column
-adult.juv.combined_df$Target <- gsub("Cg_GAPDH_205_F-355_R \\(SR IDs: 1172/3\\)", "GAPDH", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_GAPDH_205_F-355_R \\(SR IDs: 1172/3\\)", "GAPDH", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_ATPsynthase_F/R \\(SR IDs: 1385/6\\)", "ATPsynthase", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_ATPsynthase_F/R \\(SR IDs: 1385/6\\)", "ATPsynthase", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_cGAS \\(SR IDs: 1826/7\\)", "cGAS", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_cGAS \\(SR IDs: 1826/7\\)", "cGAS", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_citrate_synthase \\(SR IDs: 1383/4\\)", "citrate.sythase", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_citrate_synthase \\(SR IDs: 1383/4\\)", "citrate.sythase", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_DNMT1_F \\(SR IDs: 1510/1\\)", "DNMT1", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_DNMT1_F \\(SR IDs: 1510/1\\)", "DNMT1", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_HSP70_F/R \\(SR IDs: 598/9\\)", "HSP70", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_HSP70_F/R \\(SR IDs: 598/9\\)", "HSP70", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_Hsp90_F/R \\(SR IDs: 1532/3\\)", "HSP90", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_Hsp90_F/R \\(SR IDs: 1532/3\\)", "HSP90", combined_df$Target)
 
-adult.juv.combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIPERIN", adult.juv.combined_df$Target)
+combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIPERIN", combined_df$Target)
 
-str(adult.juv.combined_df)
+str(combined_df)
 ```
 
 ## Identify Samples with Cq.Std..Dev > 0.5
-```{r adult-juv-filter-cq-std-dev}
+```{r high-cq-std-dev}
 # Filter out rows where Cq.Std..Dev is NA
-adult.juv.combined_df <- adult.juv.combined_df[!is.na(adult.juv.combined_df$Cq.Std..Dev), ]
+combined_df <- combined_df[!is.na(combined_df$Cq.Std..Dev), ]
 
 # Filter rows where Cq.Std..Dev is greater than 0.5
-adult.juv.high_cq_std_dev <- adult.juv.combined_df[adult.juv.combined_df$Cq.Std..Dev > 0.5, ]
+high_cq_std_dev <- combined_df[combined_df$Cq.Std..Dev > 0.5, ]
 
 # Print the filtered rows with specified columns, without row names
-print(adult.juv.high_cq_std_dev[, c("Target", "Sample", "Cq", "Cq.Std..Dev")], row.names = FALSE)
+print(high_cq_std_dev[, c("Target", "Sample", "Cq", "Cq.Std..Dev")], row.names = FALSE)
 ```
 
 ## Remove bad technical reps
 ```{r adult-juv-remove-bad-technical-reps}
 # Group by Sample and Target, then filter out the outlier replicate
-adult.juv.combined.filtered_df <- adult.juv.combined_df %>%
+combined.fitered_df<- combined_df %>%
   group_by(Sample, Target) %>%
   filter(abs(Cq - mean(Cq)) <= Cq.Std..Dev)
 
 # Print the filtered data frame
-str(adult.juv.combined.filtered_df)
+str(combined.fitered_df)
 ```
 
 
 
 # Group samples by target
-```{r adult-juv-unqique-samples-by-target}
+```{r samples-by-target}
 # Group by Sample and Target, then summarize to get unique rows for each sample
-adult.juv.aggregated_df <- adult.juv.combined.filtered_df %>%
+grouped_df <- combined.fitered_df%>%
   group_by(Sample, Target) %>%
   summarize(Cq.Mean = mean(Cq.Mean, na.rm = TRUE)) %>%
   ungroup()
 
-str(adult.juv.aggregated_df)
+str(grouped_df)
 ```
 
 # Add life stage and treatment cols
-```{r adult-juv-add-cols}
+```{r add-columns}
 # Initialize new columns
-adult.juv.aggregated_df <- adult.juv.aggregated_df %>%
+grouped_df <- grouped_df %>%
   mutate(life.stage = NA_character_,
          conditioning.treatment = NA_character_,
          acute.treatment = NA_character_)
 
 # Loop through each vector
-for (vec_name in names(adult.juvenile_vector_list)) {
-  vec <- adult.juvenile_vector_list[[vec_name]]
+for (vec_name in names(groups_list)) {
+  vec <- groups_list[[vec_name]]
   stage <- strsplit(vec_name, "\\.")[[1]][1]
   conditioning_treatment <- strsplit(vec_name, "\\.")[[1]][2]
   acute_treatment <- strsplit(vec_name, "\\.")[[1]][3]
   
-  # Loop through each row in adult.juv.aggregated_df
-  for (i in 1:nrow(adult.juv.aggregated_df)) {
-    sample <- adult.juv.aggregated_df$Sample[i]
+  # Loop through each row in grouped_df
+  for (i in 1:nrow(grouped_df)) {
+    sample <- grouped_df$Sample[i]
     
     # Check if sample is in the vector
     if (sample %in% vec) {
       # Update life.stage and treatment columns
-      adult.juv.aggregated_df$life.stage[i] <- stage
-      adult.juv.aggregated_df$conditioning.treatment[i] <- conditioning_treatment
-      adult.juv.aggregated_df$acute.treatment[i] <-acute_treatment
+      grouped_df$life.stage[i] <- stage
+      grouped_df$conditioning.treatment[i] <- conditioning_treatment
+      grouped_df$acute.treatment[i] <-acute_treatment
     }
   }
 }
 
-str(adult.juv.aggregated_df)
+str(grouped_df)
 
 ```
 
 # Delta Cq to Normalizing Gene
-```{r adult-juv-delta-Cq}
+```{r delta-Cq}
 # Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
-delta_Cq_df <- calculate_delta_Cq(adult.juv.aggregated_df)
+delta_Cq_df <- calculate_delta_Cq(grouped_df)
 
 str(delta_Cq_df)
 ```
