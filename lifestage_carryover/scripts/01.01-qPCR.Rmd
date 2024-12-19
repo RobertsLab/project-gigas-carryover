@@ -221,6 +221,58 @@ str(delta_Cq_df)
 ```
 
 
+```{r}
+# View the levels of life.stage for each Target
+life_stage_levels <- delta_Cq_df %>%
+  group_by(Target, life.stage) %>%
+  summarise(levels = list(unique(life.stage))) %>%
+  ungroup()
+
+print(n = 32, life_stage_levels)
+```
+
+# t-tests
+
+## Life Stages
+```{r life-stage-t-tests}
+# Extract unique life.stage levels
+unique_life_stages <- unique(delta_Cq_df$life.stage)
+
+# Generate all possible pairs of life.stage levels
+life_stage_pairs <- combn(unique_life_stages, 2, simplify = FALSE)
+
+# Initialize a list to store results
+life_stage_t_test_results_list <- list()
+
+for (pair in life_stage_pairs) {
+  stage1 <- pair[1]
+  stage2 <- pair[2]
+  
+  # Perform t-test for each Target comparing the two life.stage levels
+  t_test_results <- delta_Cq_df %>%
+    filter(life.stage %in% c(stage1, stage2)) %>%
+    group_by(Target) %>%
+    summarise(
+      t_test_result = list(t.test(delta_Cq ~ life.stage))
+    ) %>%
+    ungroup() %>%
+    mutate(
+      estimate_diff = sapply(t_test_result, function(x) x$estimate[1] - x$estimate[2]),
+      p_value = sapply(t_test_result, function(x) x$p.value),
+      asterisk = ifelse(p_value <= 0.05, "*", ""),
+      comparison = paste(stage1, "vs", stage2, sep = ".")
+    ) %>%
+    select(!t_test_result)
+  
+  life_stage_t_test_results_list[[paste(stage1, stage2, sep = ".")]] <- t_test_results
+}
+
+# Combine results into a single data frame
+life_stage_t_test_results_df <- bind_rows(life_stage_t_test_results_list, .id = "comparison")
+
+# View the results
+print(life_stage_t_test_results_df)
+```
 
 # PRELIMINARY ANALYSIS
 
