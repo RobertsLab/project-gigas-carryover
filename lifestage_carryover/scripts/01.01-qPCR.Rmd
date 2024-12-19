@@ -164,7 +164,32 @@ create_boxplot_delta_Cq <- function(data, comparison, t_test_results) {
 }
 ```
 
-### Treatment comparisons
+### Conditioning comparisons
+
+1. Extract Life Stage and Conditioning Treatments:
+
+- The comparison string is split into its components (`life_stage`, `treatment1`, and `treatment2`).
+
+2. Filter Data:
+
+- The filtered_data data frame is filtered to include only the rows with the relevant life stage and conditioning treatments.
+
+3. Check for Both Treatments:
+
+- Ensure that both treatments are included in the `filtered_data`.
+
+4. Filter T-Test Results:
+
+- The `t_test_results_filtered` data frame is filtered for the specific comparison.
+
+- The `t_test_results_with_asterisks` data frame is created to include only the rows with asterisks.
+
+5. Format the Title:
+
+- The `formatted_title` variable is created by capitalizing the first letter of each component and concatenating them with " - " and " vs. " in between.
+
+- This should create box plots comparing conditioning treatments within each life stage, with titles formatted as `<life.stage> - Treated vs. Control`.
+
 ```{r function-boxplots-delta-Cq-treatments}
 # Function to create box plots for each comparison of conditioning treatments within life stages
 create_boxplot_conditioning <- function(data, comparison, t_test_results) {
@@ -221,6 +246,104 @@ create_boxplot_conditioning <- function(data, comparison, t_test_results) {
                             toupper(substring(treatment2, 1, 1)), substring(treatment2, 2))
 
   boxplot <- ggplot(filtered_data, aes(x = Target, y = delta_Cq, fill = conditioning.treatment)) +
+    geom_boxplot(position = position_dodge(width = 0.75)) +
+    theme_minimal() +
+    theme(legend.position = "right") +
+    scale_fill_manual(values=c("darkgray", "salmon")) +
+    ylim(y_limits) +
+    labs(x = "Target", y = "Delta Cq", title = formatted_title) +
+    # Highlighted section: Adds asterisks
+    geom_text(data = t_test_results_with_asterisks, 
+              aes(x = Target, y = y_limits[2] - 1, label = asterisk), 
+              vjust = -0.5, size = 8, color = "black", inherit.aes = FALSE)
+
+  print(boxplot)
+}
+```
+
+### Acute comparisons
+
+1. Extract Life Stage and Acute Treatments:
+
+- The comparison string is split into its components (`life_stage`, `treatment1`, and `treatment2`).
+
+2. Filter Data:
+
+- The `filtered_data` data frame is filtered to include only the rows with the relevant life stage and acute treatments.
+
+3. Check for Both Treatments:
+
+- Ensure that both treatments are included in the `filtered_data`.
+
+4. Filter T-Test Results:
+
+- The `t_test_results_filtered` data frame is filtered for the specific comparison.
+
+- The `t_test_results_with_asterisks` data frame is created to include only the rows with asterisks.
+Format the Title:
+
+5. The formatted_title variable is created by capitalizing the first letter of each component and concatenating them with " - " and " vs. " in between.
+- This should create box plots comparing acute treatments within each life stage, with titles formatted as `<life.stage> - Ambient vs. High`.
+```{r function-boxplots-delta-Cq-treatments}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# Function to create box plots for each comparison of acute treatments within life stages
+create_boxplot_acute <- function(data, comparison, t_test_results) {
+  # Extract life stage and acute treatments from comparison
+  comparison_parts <- unlist(strsplit(comparison, "\\."))
+  life_stage <- comparison_parts[1]
+  treatment1 <- comparison_parts[2]
+  treatment2 <- comparison_parts[3]
+
+  # Debugging: Print life stage and treatments
+  print(paste("Life stage and treatments for comparison:", comparison))
+  print(c(life_stage, treatment1, treatment2))
+
+  # Filter data for the relevant life stage and acute treatments
+  filtered_data <- data %>%
+    filter(life.stage == life_stage, acute.treatment %in% c(treatment1, treatment2))
+
+  # Debugging: Print filtered data
+  print("Filtered data:")
+  print(filtered_data)
+
+  # Check if both treatments are included
+  if (!all(c(treatment1, treatment2) %in% unique(filtered_data$acute.treatment))) {
+    stop("Not all treatments are included in the filtered data")
+  }
+
+  y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
+
+  # Debugging: Print y_limits
+  print("Y limits:")
+  print(y_limits)
+
+  # Filter t_test_results for the current comparison
+  t_test_results_filtered <- t_test_results %>%
+    filter(comparison == !!comparison)
+
+  # Debugging: Print filtered t_test_results
+  print("Filtered t_test_results:")
+  print(t_test_results_filtered)
+
+  # Filter t_test_results for asterisks
+  t_test_results_with_asterisks <- t_test_results_filtered %>%
+    filter(asterisk != "")
+
+  # Debugging: Print t_test_results_with_asterisks
+  print("t_test_results_with_asterisks:")
+  print(t_test_results_with_asterisks)
+
+  # Format the title
+  formatted_title <- paste0(toupper(substring(life_stage, 1, 1)), substring(life_stage, 2), 
+                            " - ", 
+                            toupper(substring(treatment1, 1, 1)), substring(treatment1, 2), 
+                            " vs. ", 
+                            toupper(substring(treatment2, 1, 1)), substring(treatment2, 2))
+
+  boxplot <- ggplot(filtered_data, aes(x = Target, y = delta_Cq, fill = acute.treatment)) +
     geom_boxplot(position = position_dodge(width = 0.75)) +
     theme_minimal() +
     theme(legend.position = "right") +
@@ -570,6 +693,16 @@ unique_comparisons <- unique(conditioning_treatment_t_test_results_df$comparison
 
 for (comparison in unique_comparisons) {
   create_boxplot_conditioning(delta_Cq_df, comparison, conditioning_treatment_t_test_results_df)
+}
+```
+
+## Acute treatment comparisons
+```{r delta-Cq-boxplots-acute-treatment}
+# Create box plots for each comparison
+unique_comparisons <- unique(acute_treatment_t_test_results_df$comparison)
+
+for (comparison in unique_comparisons) {
+  create_boxplot_acute(delta_Cq_df, comparison, acute_treatment_t_test_results_df)
 }
 ```
 
