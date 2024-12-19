@@ -160,7 +160,7 @@ print(high_cq_std_dev[, c("Target", "Sample", "Cq", "Cq.Std..Dev")], row.names =
 # Group by Sample and Target, then filter out the outlier replicate
 combined.fitered_df<- combined_df %>%
   group_by(Sample, Target) %>%
-  filter(abs(Cq - mean(Cq)) <= Cq.Std..Dev)
+  filter(abs(Cq - mean(Cq, na.rm = TRUE)) <= Cq.Std..Dev)
 
 # Print the filtered data frame
 str(combined.fitered_df)
@@ -173,7 +173,7 @@ str(combined.fitered_df)
 # Group by Sample and Target, then summarize to get unique rows for each sample
 grouped_df <- combined.fitered_df%>%
   group_by(Sample, Target) %>%
-  summarize(Cq.Mean = mean(Cq.Mean, na.rm = TRUE)) %>%
+  summarize(Cq.Mean = mean(Cq, na.rm = TRUE)) %>%
   ungroup()
 
 str(grouped_df)
