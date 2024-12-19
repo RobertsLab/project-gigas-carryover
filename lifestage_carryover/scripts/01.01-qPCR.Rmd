@@ -234,6 +234,9 @@ print(n = 32, life_stage_levels)
 # t-tests
 
 ## Life Stages
+
+
+
 ```{r life-stage-t-tests}
 # Extract unique life.stage levels
 unique_life_stages <- unique(delta_Cq_df$life.stage)
@@ -259,7 +262,7 @@ for (pair in life_stage_pairs) {
     mutate(
       estimate_diff = sapply(t_test_result, function(x) x$estimate[1] - x$estimate[2]),
       p_value = sapply(t_test_result, function(x) x$p.value),
-      asterisk = ifelse(p_value <= 0.05, "*", ""),
+      asterisk = ifelse(p_value <= 0.05, "*", ""), # Adds asterisk column and asterisk for p-value.
       comparison = paste(stage1, "vs", stage2, sep = ".")
     ) %>%
     select(!t_test_result)
@@ -273,6 +276,63 @@ life_stage_t_test_results_df <- bind_rows(life_stage_t_test_results_list, .id = 
 # View the results
 print(life_stage_t_test_results_df)
 ```
+
+## Conditioning treatments
+
+This code does the following:
+
+1. Extracts the unique life.stage levels from the data frame.
+2. For each life.stage, extracts the unique conditioning.treatment levels.
+3. Generates all possible pairs of conditioning.treatment levels within each life.stage.
+4. Iterates over each pair and performs the t-test for each Target.
+5. Stores the results in a list and combines them into a single data frame.
+6. Adds a comparison column to indicate which life.stage and conditioning.treatment levels were compared.
+
+```{r conditioning-treatments-life-stages}
+# Extract unique life.stage levels
+unique_life_stages <- unique(delta_Cq_df$life.stage)
+
+# Initialize a list to store results
+conditioning_treatment_t_test_results_list <- list()
+
+for (stage in unique_life_stages) {
+  # Extract unique conditioning.treatment levels within the current life.stage
+  unique_treatments <- unique(delta_Cq_df %>% filter(life.stage == stage) %>% pull(conditioning.treatment))
+  
+  # Generate all possible pairs of conditioning.treatment levels
+  treatment_pairs <- combn(unique_treatments, 2, simplify = FALSE)
+  
+  for (pair in treatment_pairs) {
+    treatment1 <- pair[1]
+    treatment2 <- pair[2]
+    
+    # Perform t-test for each Target comparing the two conditioning.treatment levels within the current life.stage
+    t_test_results <- delta_Cq_df %>%
+      filter(life.stage == stage, conditioning.treatment %in% c(treatment1, treatment2)) %>%
+      group_by(Target) %>%
+      summarise(
+        t_test_result = list(t.test(delta_Cq ~ conditioning.treatment))
+      ) %>%
+      ungroup() %>%
+      mutate(
+        estimate_diff = sapply(t_test_result, function(x) x$estimate[1] - x$estimate[2]),
+        p_value = sapply(t_test_result, function(x) x$p.value),
+        asterisk = ifelse(p_value <= 0.05, "*", ""), # Adds asterisk column and asterisk for p-value.
+        comparison = paste(stage, treatment1, "vs", treatment2, sep = ".")
+      ) %>%
+      select(!t_test_result)
+    
+    conditioning_treatment_t_test_results_list[[paste(stage, treatment1, treatment2, sep = ".")]] <- t_test_results
+  }
+}
+
+# Combine results into a single data frame
+conditioning_treatment_t_test_results_df <- bind_rows(conditioning_treatment_t_test_results_list, .id = "comparison")
+
+# View the results
+print(conditioning_treatment_t_test_results_df)
+```
+
 
 # PRELIMINARY ANALYSIS
 
