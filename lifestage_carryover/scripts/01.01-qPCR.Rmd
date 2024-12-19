@@ -34,10 +34,6 @@ library("ggplot2")
 
 ## Set sample groups
 ```{r set-sample-groups}
-seed.control=c("223", "243", "244")
-seed.treated=c("200", "257", "285")
-spat.control=c("206", "282", "284", "289")
-spat.treated=c("220", "226", "242", "253", "296", "298")
 
 seed.control.ambient=c("29", "40", "55", "63", "69", "101", "119", "122", "155", "164", "187", "202", "209", "214", "233", "236", "275")
 seed.control.high=c("42", "59", "60", "62", "86", "102", "140", "176", "177", "184", "192", "223", "234", "243", "244", "254", "264")
@@ -58,10 +54,6 @@ adult.treated.high=c("21", "22", "45", "82", "85", "91", "95", "99", "103", "108
 
 # Combine vectors into lists
 # Used for adding treatment info and/or subsetting downstream
-seed.spat_vector_list <- list(seed.control = seed.control,
-                    seed.treated = seed.treated,
-                    spat.control = spat.control,
-                    spat.treated = spat.treated)
 
 adult.juvenile_vector_list <- list(juvenile.control.ambient = juvenile.control.ambient,
                                    juvenile.control.high = juvenile.control.high,
@@ -80,11 +72,19 @@ adult.juvenile_vector_list <- list(juvenile.control.ambient = juvenile.control.a
                                    spat.treated.high = spat.treated.high)
 ```
 
+# Functions
+```{r function-delta-Cq}
+calculate_delta_Cq <- function(df) {
+  df <- df %>%
+    group_by(Sample) %>%
+    mutate(delta_Cq = Cq.Mean - Cq.Mean[Target == "GAPDH"]) %>%
+    ungroup()
+  
+  return(df)
+}
+```
 
-
-
-## ADULT AND JUVENILE
-### Read in files
+# Read in files
 ```{r read-in-adult-juv-files}
 # Set the directory where your CSV files are located
 cqs_directory <- "lifestage_carryover/data/qPCR/Cq"
@@ -110,7 +110,10 @@ str(adult.juv.combined_df)
 
 ```
 
-### Replace target names
+# Clean data
+
+
+## Replace target names
 ```{r replace-target-names}
 # Remove rows with Sample name "NTC"
 adult.juv.combined_df <- adult.juv.combined_df[adult.juv.combined_df$Sample != "NTC", ]
@@ -136,7 +139,7 @@ adult.juv.combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIP
 str(adult.juv.combined_df)
 ```
 
-### Identify Samples with Cq.Std..Dev > 0.5
+## Identify Samples with Cq.Std..Dev > 0.5
 ```{r adult-juv-filter-cq-std-dev}
 # Filter out rows where Cq.Std..Dev is NA
 adult.juv.combined_df <- adult.juv.combined_df[!is.na(adult.juv.combined_df$Cq.Std..Dev), ]
@@ -148,7 +151,7 @@ adult.juv.high_cq_std_dev <- adult.juv.combined_df[adult.juv.combined_df$Cq.Std.
 print(adult.juv.high_cq_std_dev[, c("Target", "Sample", "Cq", "Cq.Std..Dev")], row.names = FALSE)
 ```
 
-### Remove bad technical reps
+## Remove bad technical reps
 ```{r adult-juv-remove-bad-technical-reps}
 # Group by Sample and Target, then filter out the outlier replicate
 adult.juv.combined.filtered_df <- adult.juv.combined_df %>%
@@ -159,7 +162,9 @@ adult.juv.combined.filtered_df <- adult.juv.combined_df %>%
 str(adult.juv.combined.filtered_df)
 ```
 
-### Unique samples by target
+
+
+# Group samples by target
 ```{r adult-juv-unqique-samples-by-target}
 # Group by Sample and Target, then summarize to get unique rows for each sample
 adult.juv.aggregated_df <- adult.juv.combined.filtered_df %>%
@@ -170,7 +175,7 @@ adult.juv.aggregated_df <- adult.juv.combined.filtered_df %>%
 str(adult.juv.aggregated_df)
 ```
 
-### Add life stage and treatment cols
+# Add life stage and treatment cols
 ```{r adult-juv-add-cols}
 # Initialize new columns
 adult.juv.aggregated_df <- adult.juv.aggregated_df %>%
@@ -203,7 +208,7 @@ str(adult.juv.aggregated_df)
 
 ```
 
-### Delta Cq to Normalizing Gene
+# Delta Cq to Normalizing Gene
 ```{r adult-juv-delta-Cq}
 # Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
 delta_Cq_df <- calculate_delta_Cq(adult.juv.aggregated_df)
@@ -211,22 +216,28 @@ delta_Cq_df <- calculate_delta_Cq(adult.juv.aggregated_df)
 str(delta_Cq_df)
 ```
 
-# Functions
-```{r function-delta-Cq}
-calculate_delta_Cq <- function(df) {
-  df <- df %>%
-    group_by(Sample) %>%
-    mutate(delta_Cq = Cq.Mean - Cq.Mean[Target == "GAPDH"]) %>%
-    ungroup()
-  
-  return(df)
-}
-```
 
-## PRELIMINARY ANALYSIS
+
+# PRELIMINARY ANALYSIS
 
 Analysis below was previously conducted with a preliminary set of samples to decide
 if this project warranted moving forward with.
+
+## Set sample groups
+```{r set-sample-groups}
+seed.control=c("223", "243", "244")
+seed.treated=c("200", "257", "285")
+spat.control=c("206", "282", "284", "289")
+spat.treated=c("220", "226", "242", "253", "296", "298")
+
+# Combine vectors into lists
+# Used for adding treatment info and/or subsetting downstream
+seed.spat_vector_list <- list(seed.control = seed.control,
+                    seed.treated = seed.treated,
+                    spat.control = spat.control,
+                    spat.treated = spat.treated)
+
+```
 
 ### Read in files
 ```{r read-in-files}
