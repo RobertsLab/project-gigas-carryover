@@ -900,7 +900,7 @@ delta_delta_Cq_life_stage_df <- delta_Cq_df %>%
 str(delta_delta_Cq_life_stage_df)
 ```
 
-
+### Calculate delta delta acute treatments within lifestage and conditioning
 ```{r delta-delta-Cq-acute-within-life-stage-conditioning, eval=TRUE}
 # Calculate delta_delta_Cq for acute treatment comparisons within each life stage and conditioning treatment
 delta_delta_Cq_acute_within_life_stage_conditioning_df <- delta_Cq_df %>%
@@ -947,6 +947,7 @@ delta_delta_acute_fold_change <- delta_delta_Cq_acute_df %>%
 str(delta_delta_acute_fold_change)
 ```
 
+### Calculate fold change acute treatments within lifestage and conditioning
 ```{r fold-change-acute-within-life-stage-conditioning, eval=TRUE}
 # Calculate fold change for acute treatment comparisons within each life stage and conditioning treatment
 fold_change_acute_within_life_stage_conditioning_df <- delta_delta_Cq_acute_within_life_stage_conditioning_df %>%
@@ -958,6 +959,7 @@ str(fold_change_acute_within_life_stage_conditioning_df)
 
 ## Plotting fold changes
 
+### Acute comparisons within lifestage and conditioning
 ```{r bar-plots-fold-change-acute-within-lifestage-conditioning, eval=TRUE, warning=FALSE, message=FALSE}
 library(ggplot2)
 
@@ -1019,6 +1021,7 @@ ggplot(delta_delta_conditioning_fold_change, aes(x = Target, y = fold_change, fi
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+### Line plot conditioning comparisons across lifestages
 ```{r lineplot-fold-change-conditioning, echo=FALSE, eval=TRUE}
 # Ensure life.stage is a factor with the correct order
 delta_delta_conditioning_fold_change$life.stage <- factor(delta_delta_conditioning_fold_change$life.stage,
@@ -1036,6 +1039,7 @@ ggplot(delta_delta_conditioning_fold_change, aes(x = life.stage, y = fold_change
   ylim(0, NA)
 ```
 
+### Acute treatment comparison
 ```{r barplot-fold-change-acute, echo=FALSE, eval=TRUE}
 # Create the bar plot
 ggplot(delta_delta_acute_fold_change, aes(x = Target, y = fold_change, fill = acute.treatment)) +
