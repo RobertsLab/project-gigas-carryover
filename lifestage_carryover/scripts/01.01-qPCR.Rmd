@@ -889,7 +889,7 @@ str(delta_delta_Cq_acute_df)
 ```
 
 ### Life stage
-```{r delta-delta-Cq-life-stage}
+```{r delta-delta-Cq-life-stage, eval=TRUE}
 # Calculate delta_delta_Cq for life stage comparisons
 delta_delta_Cq_life_stage_df <- delta_Cq_df %>%
   group_by(Target, life.stage) %>%
@@ -925,7 +925,7 @@ str(delta_delta_Cq_acute_within_life_stage_conditioning_df)
 ```
 
 ### Calculate the fold change life stage comparison
-```{r fold-change-life-stage}
+```{r fold-change-life-stage, eval=TRUE}
 # Calculate fold change and output to a new data frame
 fold_change_life_stage_df <- delta_delta_Cq_life_stage_df %>%
   mutate(fold_change = 2^(-delta_delta_Cq))
@@ -994,7 +994,7 @@ for (plot in plot_list) {
 ```
 
 ### Life stage comparisons
-```{r bar-plots-fold-change, eval=TRUE}
+```{r bar-plots-fold-change-lifestages, eval=TRUE}
 
 # Generate bar plots for each group of comparison
 plot_list <- fold_change_life_stage_df %>%
