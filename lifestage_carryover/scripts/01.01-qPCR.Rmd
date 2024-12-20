@@ -797,6 +797,18 @@ ggplot(delta_delta_conditioning_fold_change, aes(x = life.stage, y = fold_change
   ylim(0, NA)
 ```
 
+```{r barplot-fold-change-acute, echo=FALSE}
+# Create the bar plot
+ggplot(delta_delta_acute_fold_change, aes(x = Target, y = fold_change, fill = acute.treatment)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ life.stage, scales = "free_x") +
+  theme_minimal() +
+  labs(title = "Fold Change in Acute Treatment Expression by Target and Life Stage",
+       x = "Target",
+       y = "Fold Change") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 ---
 
 # PRELIMINARY ANALYSIS
