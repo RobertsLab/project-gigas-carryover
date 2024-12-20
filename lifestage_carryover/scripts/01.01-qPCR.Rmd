@@ -3,6 +3,9 @@ title: "01.01-qPCR"
 author: "Sam White"
 date: "2024-03-27"
 output: 
+  github_document:
+    toc: true
+    number_sections: true
   bookdown::html_document2:
     theme: cosmo
     toc: true
@@ -10,9 +13,6 @@ output:
     number_sections: true
     code_folding: show
     code_download: true
-  github_document:
-    toc: true
-    number_sections: true
   html_document:
     theme: cosmo
     toc: true
@@ -20,15 +20,35 @@ output:
     number_sections: true
     code_folding: show
     code_download: true
-bibliography: references.bib
 link-citations: true
 ---
 
-# Load libraries
-```{r load-libraries}
-library("tidyverse")
-library("ggplot2")
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+
+knitr::opts_chunk$set(
+  echo = TRUE,         # Display code chunks
+  eval = TRUE,        # Evaluate code chunks
+  warning = FALSE,     # Hide warnings
+  message = FALSE,     # Hide messages
+  comment = ""         # Prevents appending '##' to beginning of lines in code output
+)
+
+# Get the current working directory
+current_dir <- getwd()
+
+# Check if the script is being knitted
+if (basename(current_dir) == "scripts") {
+  # If knitting, set the path relative to the script directory
+  cqs_directory <- "../data/qPCR/Cq"
+} else {
+  # If running interactively, set the path relative to the project directory
+  cqs_directory <- "lifestage_carryover/data/qPCR/Cq"
+}
 ```
+
 
 # Set variables
 
@@ -39,7 +59,7 @@ Groups are named in the following fashion:
 `<life.stage>.<conditioning.treatment>.<acute.treatment>`
 
 This allows for parsing downstream.
-```{r set-sample-groups}
+```{r set-sample-groups, eval=TRUE}
 
 seed.control.ambient=c("29", "40", "55", "63", "69", "101", "119", "122", "155", "164", "187", "202", "209", "214", "233", "236", "275")
 seed.control.high=c("42", "59", "60", "62", "86", "102", "140", "176", "177", "184", "192", "223", "234", "243", "244", "254", "264")
@@ -60,7 +80,7 @@ adult.treated.high=c("21", "22", "45", "82", "85", "91", "95", "99", "103", "108
 
 ```
 
-```{r assign-groups-to-list}
+```{r assign-groups-to-list, eval=TRUE}
 # Combine vectors into lists
 # Used for adding treatment info and/or subsetting downstream
 
@@ -87,7 +107,7 @@ groups_list <- list(juvenile.control.ambient = juvenile.control.ambient,
 ## Calculate delta Cq
 
 Normalized to designated normalizing gene
-```{r function-delta-Cq}
+```{r function-delta-Cq, eval=TRUE}
 calculate_delta_Cq <- function(df) {
   df <- df %>%
     group_by(Sample) %>%
@@ -101,7 +121,7 @@ calculate_delta_Cq <- function(df) {
 ## Create delta Cq boxplots
 
 ### Lifestage comparison
-```{r function-boxplots-delta-Cq}
+```{r function-boxplots-delta-Cq, eval=TRUE}
 # Function to create box plots for each comparison
 create_boxplot_delta_Cq <- function(data, comparison, t_test_results) {
   # Extract life stages from comparison
@@ -192,7 +212,7 @@ create_boxplot_delta_Cq <- function(data, comparison, t_test_results) {
 
 - This should create box plots comparing conditioning treatments within each life stage, with titles formatted as `<life.stage> - Treated vs. Control`.
 
-```{r function-boxplots-delta-Cq-treatments}
+```{r function-boxplots-delta-Cq-conditioning-treatments, eval=TRUE}
 # Function to create box plots for each comparison of conditioning treatments within life stages
 create_boxplot_conditioning <- function(data, comparison, t_test_results) {
   # Extract life stage and conditioning treatments from comparison
@@ -286,10 +306,7 @@ Format the Title:
 
 5. The formatted_title variable is created by capitalizing the first letter of each component and concatenating them with " - " and " vs. " in between.
 - This should create box plots comparing acute treatments within each life stage, with titles formatted as `<life.stage> - Ambient vs. High`.
-```{r function-boxplots-delta-Cq-treatments}
-# Load necessary libraries
-library(ggplot2)
-library(dplyr)
+```{r function-boxplots-delta-Cq-treatments, eval=TRUE}
 
 # Function to create box plots for each comparison of acute treatments within life stages
 create_boxplot_acute <- function(data, comparison, t_test_results) {
@@ -362,9 +379,7 @@ create_boxplot_acute <- function(data, comparison, t_test_results) {
 ```
 
 # Read in files
-```{r read-in-Cq-files}
-# Set the directory where your CSV files are located
-cqs_directory <- "lifestage_carryover/data/qPCR/Cq"
+```{r read-in-Cq-files, eval=TRUE}
 
 # Get a list of all CSV files in the directory with the naming structure "*Cq-Results.csv"
 cq_file_list <- list() # Initialize list
@@ -391,7 +406,7 @@ str(combined_df)
 
 
 ## Replace target names
-```{r replace-target-names}
+```{r replace-target-names, eval=TRUE}
 # Remove rows with Sample name "NTC"
 combined_df <- combined_df[combined_df$Sample != "NTC", ]
 
@@ -416,8 +431,10 @@ combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIPERIN", com
 str(combined_df)
 ```
 
+
+
 ## Identify Samples with Cq.Std..Dev > 0.5
-```{r high-cq-std-dev}
+```{r high-cq-std-dev, eval=TRUE}
 # Filter out rows where Cq.Std..Dev is NA
 combined_df <- combined_df[!is.na(combined_df$Cq.Std..Dev), ]
 
@@ -429,7 +446,7 @@ print(high_cq_std_dev[, c("Target", "Sample", "Cq", "Cq.Std..Dev")], row.names =
 ```
 
 ## Remove bad technical reps
-```{r adult-juv-remove-bad-technical-reps}
+```{r adult-juv-remove-bad-technical-reps, eval=TRUE}
 # Group by Sample and Target, then filter out the outlier replicate
 combined.fitered_df<- combined_df %>%
   group_by(Sample, Target) %>%
@@ -442,7 +459,7 @@ str(combined.fitered_df)
 
 
 # Group samples by target
-```{r samples-by-target}
+```{r samples-by-target, eval=TRUE}
 # Group by Sample and Target, then summarize to get unique rows for each sample
 grouped_df <- combined.fitered_df%>%
   group_by(Sample, Target) %>%
@@ -453,7 +470,7 @@ str(grouped_df)
 ```
 
 # Add life stage and treatment cols
-```{r add-columns}
+```{r add-columns, eval=TRUE}
 # Initialize new columns
 grouped_df <- grouped_df %>%
   mutate(life.stage = NA_character_,
@@ -486,7 +503,7 @@ str(grouped_df)
 ```
 
 # Delta Cq to Normalizing Gene
-```{r delta-Cq}
+```{r delta-Cq, eval=TRUE}
 # Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
 delta_Cq_df <- calculate_delta_Cq(grouped_df)
 
@@ -511,7 +528,7 @@ parsing.
 4. Stores the results in a list and combines them into a single data frame.
 5. Adds a comparison column to indicate which life.stage levels were compared.
 
-```{r life-stage-t-tests}
+```{r life-stage-t-tests, eval=TRUE}
 # Extract unique life.stage levels
 unique_life_stages <- unique(delta_Cq_df$life.stage)
 
@@ -564,7 +581,7 @@ parsing.
 5. Stores the results in a list and combines them into a single data frame.
 6. Adds a comparison column to indicate which life.stage and conditioning.treatment levels were compared.
 
-```{r conditioning-treatments-life-stages}
+```{r conditioning-treatments-life-stages, eval=TRUE}
 # Extract unique life.stage levels
 unique_life_stages <- unique(delta_Cq_df$life.stage)
 
@@ -624,7 +641,7 @@ parsing.
 6. Adds a comparison column to indicate which life.stage and acute.treatment levels were compared.
 
 Excludes `seed` and `spat`, as these were only held at `ambient` for the acute treatment.
-```{r acute-treatments-life-stages}
+```{r acute-treatments-life-stages, eval=TRUE}
 # Extract unique life.stage levels, excluding 'seed' and 'spat'
 unique_life_stages <- unique(delta_Cq_df$life.stage)
 unique_life_stages <- setdiff(unique_life_stages, c("seed", "spat"))
@@ -679,7 +696,7 @@ print(acute_treatment_t_test_results_df)
 ### Delta Cq boxplots
 
 #### Lifestage comparisons
-```{r delta-Cq-boxplots-lifestage}
+```{r delta-Cq-boxplots-lifestage, eval=TRUE}
 # Create box plots for each comparison
 unique_comparisons <- unique(life_stage_t_test_results_df$comparison)
 
@@ -689,7 +706,7 @@ for (comparison in unique_comparisons) {
 ```
 
 ### Conditioning comparisons
-```{r delta-Cq-boxplots-conditioning}
+```{r delta-Cq-boxplots-conditioning, eval=TRUE}
 
 # Create box plots for each comparison
 unique_comparisons <- unique(conditioning_treatment_t_test_results_df$comparison)
@@ -700,7 +717,7 @@ for (comparison in unique_comparisons) {
 ```
 
 ### Acute treatment comparisons
-```{r delta-Cq-boxplots-acute-treatment}
+```{r delta-Cq-boxplots-acute-treatment, eval=TRUE}
 # Create box plots for each comparison
 unique_comparisons <- unique(acute_treatment_t_test_results_df$comparison)
 
@@ -714,7 +731,7 @@ for (comparison in unique_comparisons) {
 ## Calculations
 
 ### Conditioning
-```{r delta-delta-Cq-conditioning}
+```{r delta-delta-Cq-conditioning, eval=TRUE}
 # Calculate delta_delta_Cq
 delta_delta_conditioning_fold_change <- delta_Cq_df %>%
   group_by(life.stage, Target) %>%
@@ -729,7 +746,7 @@ str(delta_delta_conditioning_fold_change)
 ```
 
 ### Acute treatment
-```{r delta-delta-Cq-acute}
+```{r delta-delta-Cq-acute, eval=TRUE}
 # Calculate delta_delta_Cq for acute treatment
 delta_delta_Cq_acute_df <- delta_Cq_df %>%
   group_by(life.stage, Target, acute.treatment) %>%
@@ -746,7 +763,7 @@ str(delta_delta_Cq_acute_df)
 
 
 ### Calculate the fold change conditioning comparison
-```{r fold-change-condition}
+```{r fold-change-condition, eval=TRUE}
 delta_delta_conditioning_fold_change <- delta_delta_conditioning_fold_change %>%
   mutate(fold_change = 2^(-delta_delta_Cq)) %>% 
   distinct(Target, fold_change)
@@ -756,7 +773,7 @@ str(delta_delta_conditioning_fold_change)
 
 
 ### Calculate the fold change acute comparison
-```{r fold-change-acute}
+```{r fold-change-acute, eval=TRUE}
 # Calculate fold change for acute treatment
 delta_delta_acute_fold_change <- delta_delta_Cq_acute_df %>%
   mutate(fold_change = 2^(-delta_delta_Cq)) %>%
@@ -767,7 +784,7 @@ str(delta_delta_acute_fold_change)
 ```
 
 ## Plotting fold changes
-```{r barplot-fold-change-conditioning, echo=FALSE}
+```{r barplot-fold-change-conditioning, echo=FALSE, eval=TRUE}
 
 # Create the bar plot
 ggplot(delta_delta_conditioning_fold_change, aes(x = Target, y = fold_change, fill = Target)) +
@@ -780,7 +797,7 @@ ggplot(delta_delta_conditioning_fold_change, aes(x = Target, y = fold_change, fi
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r lineplot-fold-change-conditioning, echo=FALSE}
+```{r lineplot-fold-change-conditioning, echo=FALSE, eval=TRUE}
 # Ensure life.stage is a factor with the correct order
 delta_delta_conditioning_fold_change$life.stage <- factor(delta_delta_conditioning_fold_change$life.stage,
                                                           levels = c("seed", "spat", "juvenile", "adult"))
@@ -797,7 +814,7 @@ ggplot(delta_delta_conditioning_fold_change, aes(x = life.stage, y = fold_change
   ylim(0, NA)
 ```
 
-```{r barplot-fold-change-acute, echo=FALSE}
+```{r barplot-fold-change-acute, echo=FALSE, eval=TRUE}
 # Create the bar plot
 ggplot(delta_delta_acute_fold_change, aes(x = Target, y = fold_change, fill = acute.treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
@@ -809,350 +826,4 @@ ggplot(delta_delta_acute_fold_change, aes(x = Target, y = fold_change, fill = ac
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
----
 
-# PRELIMINARY ANALYSIS
-
-Analysis below was previously conducted with a preliminary set of samples to decide
-if this project warranted moving forward with.
-
-## Set sample groups
-```{r set-sample-groups}
-seed.control=c("223", "243", "244")
-seed.treated=c("200", "257", "285")
-spat.control=c("206", "282", "284", "289")
-spat.treated=c("220", "226", "242", "253", "296", "298")
-
-# Combine vectors into lists
-# Used for adding treatment info and/or subsetting downstream
-seed.spat_vector_list <- list(seed.control = seed.control,
-                    seed.treated = seed.treated,
-                    spat.control = spat.control,
-                    spat.treated = spat.treated)
-
-```
-
-### Read in files
-```{r read-in-files}
-# Set the directory where your CSV files are located
-cqs_directory <- "lifestage_carryover/data/qPCR/Cq"
-
-# Get a list of all CSV files in the directory with the naming structure "*Cq_Results.csv"
-cq_file_list <- list() # Initialize list
-cq_file_list <- list.files(path = cqs_directory, pattern = "Cq_Results\\.csv$", full.names = TRUE)
-
-# Initialize an empty list to store the data frames
-data_frames <- list()
-
-# Loop through each file and read it into a data frame, then add it to the list
-for (file in cq_file_list) {
-  data <- read.csv(file, header = TRUE)
-  data_frames[[file]] <- data
-}
-
-# Combine all data frames into a single data frame
-combined_df <- bind_rows(data_frames, .id = "data_frame_id")
-
-# Convert Sample column to character type
-combined_df <- combined_df %>%
-  mutate(Sample = as.character(Sample))
-
-str(combined_df)
-
-```
-
-### Unique samples by target
-```{r unqique-samples-by-target}
-# Group by Sample and Target, then summarize to get unique rows for each sample
-aggregated_df <- combined_df %>%
-  group_by(Sample, Target) %>%
-  summarize(Cq.Mean = mean(Cq.Mean, na.rm = TRUE)) %>%
-  ungroup()
-
-str(aggregated_df)
-```
-
-### Add life stage and treatment cols
-```{r add-cols}
-# Initialize new columns
-aggregated_df <- aggregated_df %>%
-  mutate(life.stage = NA_character_,
-         treatment = NA_character_)
-
-# Loop through each vector
-for (vec_name in names(seed.spat_vector_list)) {
-  vec <- seed.spat_vector_list[[vec_name]]
-  stage <- strsplit(vec_name, "\\.")[[1]][1]
-  treatment <- strsplit(vec_name, "\\.")[[1]][2]
-  
-  # Loop through each row in aggregated_df
-  for (i in 1:nrow(aggregated_df)) {
-    sample <- aggregated_df$Sample[i]
-    
-    # Check if sample is in the vector
-    if (sample %in% vec) {
-      # Update life.stage and treatment columns
-      aggregated_df$life.stage[i] <- stage
-      aggregated_df$treatment[i] <- treatment
-    }
-  }
-}
-
-str(aggregated_df)
-
-```
-
-### Delta Cq to Normalizing Gene
-```{r delta-Cq}
-# Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
-delta_Cq_df <- calculate_delta_Cq(aggregated_df)
-
-str(delta_Cq_df)
-```
-
-
-### T-tests
-```{r t-tests}
-# Filter out groups with missing life.stage or Target
-# Caused by NTCs
-# Also removes normalizing gene(s)
-delta_Cq_df_filtered <- delta_Cq_df %>%
-  filter(!is.na(life.stage), !is.na(Target), Target != "GAPDH")
-
-# Perform t-test for each Target within life.stage
-t_test_results <- delta_Cq_df_filtered %>%
-  group_by(life.stage, Target) %>%
-  summarise(
-    t_test_result = list(t.test(delta_Cq ~ treatment))
-  ) %>%
-  ungroup()
-
-# Extract t-test statistics
-t_test_results <- t_test_results %>%
-  mutate(
-    estimate_diff = sapply(t_test_result, function(x) x$estimate[1] - x$estimate[2]),
-    p_value = sapply(t_test_result, function(x) x$p.value)
-  ) %>% 
-  select(!t_test_result)
-
-# Add asterisk information to data frame
-# if p-value <= 0.05
-# Useful for plotting
-t_test_results$asterisk <- ifelse(t_test_results$p_value <= 0.05, "*", "")
-
-str(t_test_results)
-```
-
-### Plotting
-
-#### Delta Cq Box Plots
-
-##### Seed
-
-```{r box-plots-seed-delta-Cq}
-library(ggplot2)
-
-# Filter delta_Cq_df_filtered for seed life stage
-seed_delta_Cq_df <- delta_Cq_df_filtered %>%
-  filter(life.stage == "seed")
-
-# Create the box plot
-seed_boxplot <- ggplot(seed_delta_Cq_df, aes(x = Target, y = delta_Cq, fill = treatment)) +
-  geom_boxplot(position = position_dodge(width = 0.75)) +
-  theme_minimal() +
-  theme(legend.position = "right") +
-  scale_fill_manual(values=c("darkgray", "salmon"))+
-  ylim(-2,10)+
-  labs(x = "Target", y = "Delta Cq", title = "Seed") + 
-  annotate("text", x = t_test_results$Target, y = 8, label = t_test_results$asterisk, # Adds asterisks
-           vjust = -0.5, size = 8, color = "black")
-
-# Show box plot
-print(seed_boxplot)
-```
-
-##### Spat
-```{r box-plots-delta-Cq-spat}
-# Filter data for life.stage = "spat"
-spat_delta_Cq <- delta_Cq_df_filtered %>%
-  filter(life.stage == "spat")
-
-# Calculate the maximum delta_Cq for each Target
-max_delta_Cq_by_target <- spat_delta_Cq %>%
-  group_by(Target) %>%
-  summarise(max_delta_Cq = max(delta_Cq, na.rm = TRUE))
-
-# Merge t_test_results with max_delta_Cq_by_target to get the maximum delta_Cq for each Target
-t_test_results_with_max_delta_Cq <- merge(t_test_results, max_delta_Cq_by_target, by = "Target")
-
-
-# Create the box plot
-spat_boxplot <- ggplot(spat_delta_Cq, aes(x = Target, y = delta_Cq, fill = treatment)) +
-  geom_boxplot(position = position_dodge(width = 0.75)) +
-  theme_minimal() +
-  theme(legend.position = "right") +
-  scale_fill_manual(values=c("darkgray", "salmon"))+
-  labs(x = "Target", y = "Delta Cq", title = "Spat") +
-  ylim(-2, 10)+
-  annotate("text", x = t_test_results_with_max_delta_Cq$Target, # Adds asterisks
-           y = 8, 
-           label = t_test_results_with_max_delta_Cq$asterisk,
-           vjust = -0.5, size = 10, color = "black")
-
-# Show box plot
-print(spat_boxplot)
-```
-
-### Delta delta Cq
-
-#### Add treatment and life stage
-
-```{r add-treatment-lifestage}
-# Initialize empty vectors to store life.stage and treatment
-life_stage <- character(nrow(combined_df))
-treatment <- character(nrow(combined_df))
-
-# Loop through each row of combined_df
-for (i in 1:nrow(combined_df)) {
-  sample_id <- combined_df$Sample[i]
-  
-  # Check if the sample_id is present in any of the vectors
-  found <- FALSE
-  for (vec_name in names(seed.spat_vector_list)) {
-    if (sample_id %in% seed.spat_vector_list[[vec_name]]) {
-      # If present, extract life.stage and treatment from the vector name
-      parts <- strsplit(vec_name, "\\.")[[1]]
-      life_stage[i] <- parts[1]
-      treatment[i] <- parts[2]
-      found <- TRUE
-      break  # Exit loop once found
-    }
-  }
-  
-  # If sample_id is not found in any vector, assign NA to both life.stage and treatment
-  if (!found) {
-    life_stage[i] <- NA
-    treatment[i] <- NA
-  }
-}
-
-# Add life.stage and treatment columns to combined_df
-combined_df <- combined_df %>%
-  mutate(life.stage = life_stage,
-         treatment = treatment)
-
-# Filter out rows where life.stage is NA
-combined_df_filtered <- combined_df %>% 
-  filter(!is.na(life.stage))
-
-str(combined_df_filtered)
-```
-
-
-#### Mean Cqs per gene per treatment per life stage
-```{r mean-Cqs}
-# Group by life.stage, treatment, and Target, then calculate the mean Cq
-mean_Cq_df <- combined_df_filtered %>%
-  group_by(life.stage, treatment, Target) %>%
-  summarise(mean_Cq = mean(Cq, na.rm = TRUE))
-
-str(mean_Cq_df)
-```
-
-#### Delta Cqs
-
-```{r delta-Cqs-gene-level}
-combined_df_with_delta_Cq <- mean_Cq_df %>%
-  group_by(life.stage, treatment) %>%
-  mutate(delta_Cq = mean_Cq - mean_Cq[Target == "GAPDH"]) %>%
-  ungroup() %>%
-  filter(Target != "GAPDH")
-
-str(combined_df_with_delta_Cq)
-```
-
-#### Delta delta Cq
-
-```{r delta-delta-Cq}
-# Calculate delta_delta_Cq
-delta_delta_Cq_df <- combined_df_with_delta_Cq %>%
-  group_by(life.stage, Target) %>%
-  summarize(delta_delta_Cq = delta_Cq[treatment == "control"] - delta_Cq[treatment == "treated"])
-
-str(delta_delta_Cq_df)
-
-```
-
-#### Calculate the fold change for each Target
-```{r fold-change}
-delta_delta_fold_change <- delta_delta_Cq_df %>%
-  mutate(fold_change = 2^(-delta_delta_Cq)) %>% 
-  distinct(Target, fold_change)
-
-str(delta_delta_fold_change)
-```
-
-### Plot - Seed Fold Change
-
-```{r plot-seed-fold-change}
-# Filter delta_delta_fold_change for seed life stage
-seed_df <- delta_delta_fold_change %>%
-  filter(life.stage == "seed")
-
-# Create bar plot for seed life stage
-# Create the plot with fold changes relative to baseline of 1
-seed_fc_plot <- ggplot(seed_df, aes(x = Target, y = fold_change - 1)) +
-  geom_bar(stat = "identity", fill = "white", color="black") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth=2) +  # Baseline
-  theme_minimal() +
-  labs(x = "Target", y = "Fold Change", title = "Seed Life Stage Fold Change") +
-  scale_y_continuous(limits = c(-0.5, 1))+
-  
-  geom_text(aes(x=2, y=0.2, label="*"), color="black", size=10)+
-  geom_text(aes(x=5, y=0.2, label="*"), color="black", size=10)+
-  geom_text(aes(x=6, y=0.65, label="*"), color="black", size=10)
-
-# Display plot
-seed_fc_plot
-
-```
-
-### Plot - Spat Fold Change
-```{r plot-spat-fold-change}
-# Filter delta_delta_fold_change for spat life stage
-spat_df <- delta_delta_fold_change %>%
-  filter(life.stage == "spat")
-
-# Create bar plot for spat life stage
-# Create the plot with fold changes relative to baseline of 1
-spat_fc_plot <- ggplot(spat_df, aes(x = Target, y = fold_change - 1)) +
-  geom_bar(stat = "identity", fill = "white", color="black") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth=2) +  # Baseline
-  theme_minimal() +
-  labs(x = "Target", y = "Fold Change", title = "Spat Life Stage Fold Change") +
-  scale_y_continuous(limits = c(-1, 0.5))+
-  
-  geom_text(aes(x=2, y=0.2, label="*"), color="black", size=10)+
-  geom_text(aes(x=5, y=0.2, label="*"), color="black", size=10)+
-  geom_text(aes(x=6, y=0.2, label="*"), color="black", size=10)
-  
-
-# Display plot
-spat_fc_plot
-```
-
-# Generate panel plots
-
-Generate seed plot
-```{r}
-library(cowplot)
-
-seed_grid<-plot_grid(seed_boxplot, seed_fc_plot, ncol=2, nrow=1, align="vh", rel_widths=c(1,0.8))
-ggsave(plot=seed_grid, "lifestage_carryover/output/qPCR/seed_qPCR.jpeg", width=12, height=4)
-
-spat_grid<-plot_grid(spat_boxplot, spat_fc_plot, ncol=2, nrow=1, align="vh", rel_widths=c(1,0.8))
-ggsave(plot=spat_grid, "lifestage_carryover/output/qPCR/spat_qPCR.jpeg", width=12, height=4)
-
-```
-
-Generate spat plot
