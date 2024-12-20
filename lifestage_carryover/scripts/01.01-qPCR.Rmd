@@ -128,16 +128,16 @@ create_boxplot_delta_Cq <- function(data, comparison, t_test_results) {
   life_stages <- unlist(strsplit(comparison, "\\."))
 
   # Debugging: Print life stages
-  print(paste("Life stages for comparison:", comparison))
-  print(life_stages)
+  # print(paste("Life stages for comparison:", comparison))
+  # print(life_stages)
 
   # Filter data for the relevant life stages
   filtered_data <- data %>%
     filter(life.stage %in% life_stages)
 
   # Debugging: Print filtered data
-  print("Filtered data:")
-  print(filtered_data)
+  # print("Filtered data:")
+  # print(filtered_data)
 
   # Check if both life stages are included
   if (!all(life_stages %in% unique(filtered_data$life.stage))) {
@@ -147,24 +147,24 @@ create_boxplot_delta_Cq <- function(data, comparison, t_test_results) {
   y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
 
   # Debugging: Print y_limits
-  print("Y limits:")
-  print(y_limits)
+  # print("Y limits:")
+  # print(y_limits)
 
   # Filter t_test_results for the current comparison
   t_test_results_filtered <- t_test_results %>%
     filter(comparison == !!comparison)
 
   # Debugging: Print filtered t_test_results
-  print("Filtered t_test_results:")
-  print(t_test_results_filtered)
+  # print("Filtered t_test_results:")
+  # print(t_test_results_filtered)
 
   # Filter t_test_results for asterisks
   t_test_results_with_asterisks <- t_test_results_filtered %>%
     filter(asterisk != "")
 
   # Debugging: Print t_test_results_with_asterisks
-  print("t_test_results_with_asterisks:")
-  print(t_test_results_with_asterisks)
+  # print("t_test_results_with_asterisks:")
+  # print(t_test_results_with_asterisks)
 
   formatted_title <- paste0(toupper(substring(life_stages[1], 1, 1)), substring(life_stages[1], 2), 
                             " vs. ", 
@@ -222,16 +222,16 @@ create_boxplot_conditioning <- function(data, comparison, t_test_results) {
   treatment2 <- comparison_parts[3]
 
   # Debugging: Print life stage and treatments
-  print(paste("Life stage and treatments for comparison:", comparison))
-  print(c(life_stage, treatment1, treatment2))
+  # print(paste("Life stage and treatments for comparison:", comparison))
+  # print(c(life_stage, treatment1, treatment2))
 
   # Filter data for the relevant life stage and conditioning treatments
   filtered_data <- data %>%
     filter(life.stage == life_stage, conditioning.treatment %in% c(treatment1, treatment2))
 
   # Debugging: Print filtered data
-  print("Filtered data:")
-  print(filtered_data)
+  # print("Filtered data:")
+  # print(filtered_data)
 
   # Check if both treatments are included
   if (!all(c(treatment1, treatment2) %in% unique(filtered_data$conditioning.treatment))) {
@@ -241,24 +241,24 @@ create_boxplot_conditioning <- function(data, comparison, t_test_results) {
   y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
 
   # Debugging: Print y_limits
-  print("Y limits:")
-  print(y_limits)
+  # print("Y limits:")
+  # print(y_limits)
 
   # Filter t_test_results for the current comparison
   t_test_results_filtered <- t_test_results %>%
     filter(comparison == !!comparison)
 
   # Debugging: Print filtered t_test_results
-  print("Filtered t_test_results:")
-  print(t_test_results_filtered)
+  # print("Filtered t_test_results:")
+  # print(t_test_results_filtered)
 
   # Filter t_test_results for asterisks
   t_test_results_with_asterisks <- t_test_results_filtered %>%
     filter(asterisk != "")
 
   # Debugging: Print t_test_results_with_asterisks
-  print("t_test_results_with_asterisks:")
-  print(t_test_results_with_asterisks)
+  # print("t_test_results_with_asterisks:")
+  # print(t_test_results_with_asterisks)
 
   # Format the title
   formatted_title <- paste0(toupper(substring(life_stage, 1, 1)), substring(life_stage, 2), 
@@ -317,16 +317,16 @@ create_boxplot_acute <- function(data, comparison, t_test_results) {
   treatment2 <- comparison_parts[3]
 
   # Debugging: Print life stage and treatments
-  print(paste("Life stage and treatments for comparison:", comparison))
-  print(c(life_stage, treatment1, treatment2))
+  # print(paste("Life stage and treatments for comparison:", comparison))
+  # print(c(life_stage, treatment1, treatment2))
 
   # Filter data for the relevant life stage and acute treatments
   filtered_data <- data %>%
     filter(life.stage == life_stage, acute.treatment %in% c(treatment1, treatment2))
 
   # Debugging: Print filtered data
-  print("Filtered data:")
-  print(filtered_data)
+  # print("Filtered data:")
+  # print(filtered_data)
 
   # Check if both treatments are included
   if (!all(c(treatment1, treatment2) %in% unique(filtered_data$acute.treatment))) {
@@ -336,24 +336,24 @@ create_boxplot_acute <- function(data, comparison, t_test_results) {
   y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
 
   # Debugging: Print y_limits
-  print("Y limits:")
-  print(y_limits)
+  # print("Y limits:")
+  # print(y_limits)
 
   # Filter t_test_results for the current comparison
   t_test_results_filtered <- t_test_results %>%
     filter(comparison == !!comparison)
 
   # Debugging: Print filtered t_test_results
-  print("Filtered t_test_results:")
-  print(t_test_results_filtered)
+  # print("Filtered t_test_results:")
+  # print(t_test_results_filtered)
 
   # Filter t_test_results for asterisks
   t_test_results_with_asterisks <- t_test_results_filtered %>%
     filter(asterisk != "")
 
   # Debugging: Print t_test_results_with_asterisks
-  print("t_test_results_with_asterisks:")
-  print(t_test_results_with_asterisks)
+  # print("t_test_results_with_asterisks:")
+  # print(t_test_results_with_asterisks)
 
   # Format the title
   formatted_title <- paste0(toupper(substring(life_stage, 1, 1)), substring(life_stage, 2), 
