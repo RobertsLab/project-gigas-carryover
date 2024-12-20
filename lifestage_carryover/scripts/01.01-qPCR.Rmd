@@ -372,7 +372,7 @@ create_boxplot_acute <- function(data, comparison, t_test_results) {
     # Highlighted section: Adds asterisks
     geom_text(data = t_test_results_with_asterisks, 
               aes(x = Target, y = y_limits[2] - 1, label = asterisk), 
-              vjust = -0.5, size = 8, color = "black", inherit.aes = FALSE)
+              vjust = -0.5, size = 8, color = "magenta", inherit.aes = FALSE)
 
   print(boxplot)
 }
@@ -880,6 +880,35 @@ str(delta_delta_Cq_acute_df)
 
 ```
 
+### Life stage
+```{r delta-delta-Cq-life-stage}
+# Calculate delta_delta_Cq for life stage comparisons
+delta_delta_Cq_life_stage_df <- delta_Cq_df %>%
+  group_by(Target, life.stage) %>%
+  summarize(mean_delta_Cq = mean(delta_Cq, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = life.stage, values_from = mean_delta_Cq) %>%
+  mutate(
+    delta_delta_Cq_adult_vs_seed = adult - seed,
+    delta_delta_Cq_spat_vs_seed = spat - seed,
+    delta_delta_Cq_adult_vs_spat = adult - spat
+  ) %>%
+  pivot_longer(cols = starts_with("delta_delta_Cq_"), names_to = "comparison", values_to = "delta_delta_Cq") %>%
+  filter(!is.na(delta_delta_Cq))
+
+# Display the structure of the resulting data frame
+str(delta_delta_Cq_life_stage_df)
+```
+
+### Calculate the fold change life stage comparison
+```{r fold-change-life-stage}
+# Calculate fold change and output to a new data frame
+fold_change_life_stage_df <- delta_delta_Cq_life_stage_df %>%
+  mutate(fold_change = 2^(-delta_delta_Cq))
+
+# Display the structure of the resulting data frame
+str(fold_change_life_stage_df)
+```
 
 ### Calculate the fold change conditioning comparison
 ```{r fold-change-condition, eval=TRUE}
@@ -903,6 +932,29 @@ str(delta_delta_acute_fold_change)
 ```
 
 ## Plotting fold changes
+
+```{r bar-plots-fold-change, eval=TRUE}
+
+# Generate bar plots for each group of comparison
+plot_list <- fold_change_life_stage_df %>%
+  split(.$comparison) %>%
+  lapply(function(df) {
+    comparison_title <- gsub("delta_delta_Cq_", "", unique(df$comparison))
+    comparison_title <- gsub("_vs_", " vs. ", comparison_title)
+    ggplot(df, aes(x = Target, y = fold_change)) +
+      geom_bar(stat = "identity") +
+      labs(title = paste("Gene Expression -", comparison_title), x = "Target", y = "Fold Change") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  })
+
+# Display the plots
+for (plot in plot_list) {
+  print(plot)
+}
+```
+
+
 ```{r barplot-fold-change-conditioning, echo=FALSE, eval=TRUE}
 
 # Create the bar plot
