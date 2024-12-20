@@ -691,6 +691,61 @@ print(acute_treatment_t_test_results_df)
 
 ```
 
+### Acute within life stage and conditioning
+```{r acute-treatments-within-life-stages-conditioning, eval=TRUE}
+# Extract unique life.stage levels, excluding 'seed' and 'spat'
+unique_life_stages <- unique(delta_Cq_df$life.stage)
+unique_life_stages <- setdiff(unique_life_stages, c("seed", "spat"))
+
+# Extract unique conditioning.treatment levels
+unique_conditioning_treatments <- unique(delta_Cq_df$conditioning.treatment)
+
+# Initialize a list to store results
+acute_treatment_t_test_results_list <- list()
+
+for (stage in unique_life_stages) {
+  for (conditioning in unique_conditioning_treatments) {
+    # Extract unique acute.treatment levels within the current life.stage and conditioning.treatment
+    unique_treatments <- unique(delta_Cq_df %>% filter(life.stage == stage, conditioning.treatment == conditioning) %>% pull(acute.treatment))
+    
+    # Check if there are at least 2 unique treatments
+    if (length(unique_treatments) >= 2) {
+      # Generate all possible pairs of acute.treatment levels
+      treatment_pairs <- combn(unique_treatments, 2, simplify = FALSE)
+      
+      for (pair in treatment_pairs) {
+        treatment1 <- pair[1]
+        treatment2 <- pair[2]
+        
+        # Perform t-test for each Target comparing the two acute.treatment levels within the current life.stage and conditioning.treatment
+        t_test_results <- delta_Cq_df %>%
+          filter(life.stage == stage, conditioning.treatment == conditioning, acute.treatment %in% c(treatment1, treatment2)) %>%
+          group_by(Target) %>%
+          summarise(
+            t_test_result = list(t.test(delta_Cq ~ acute.treatment))
+          ) %>%
+          ungroup() %>%
+          mutate(
+            estimate_diff = sapply(t_test_result, function(x) x$estimate[1] - x$estimate[2]),
+            p_value = sapply(t_test_result, function(x) x$p.value),
+            asterisk = ifelse(p_value <= 0.05, "*", ""), # Adds asterisk column and asterisk for p-value.
+            comparison = paste(stage, conditioning, treatment1, "vs", treatment2, sep = ".")
+          ) %>%
+          select(!t_test_result)
+        
+        acute_treatment_t_test_results_list[[paste(stage, conditioning, treatment1, treatment2, sep = ".")]] <- t_test_results
+      }
+    }
+  }
+}
+
+# Combine results into a single data frame
+acute_treatment_t_test_results_df <- bind_rows(acute_treatment_t_test_results_list, .id = "comparison")
+
+# View the results
+print(acute_treatment_within_life_stage_condiitioning_t_test_results_df)
+```
+
 ## Plotting
 
 ### Delta Cq boxplots
