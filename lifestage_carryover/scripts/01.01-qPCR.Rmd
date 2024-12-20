@@ -1,7 +1,7 @@
 ---
 title: "01.01-qPCR"
 author: "Sam White"
-date: "2024-03-27"
+date: "2024-12-20"
 output: 
   github_document:
     toc: true
@@ -23,6 +23,10 @@ output:
 link-citations: true
 ---
 
+# Description
+
+This notebook performs pair-wise comparisons of qPCR gene expression, normalized to `GAPDH` expression. It calculates delta Cq, delta delta Cq, and fold changes in expression. Additionally, it generates box plots (delta Cq), and bar plots (fold change expression).
+
 ```{r setup, include=FALSE}
 library(knitr)
 library(tidyverse)
@@ -30,7 +34,7 @@ library(ggplot2)
 
 knitr::opts_chunk$set(
   echo = TRUE,         # Display code chunks
-  eval = TRUE,        # Evaluate code chunks
+  eval = FALSE,        # Evaluate code chunks
   warning = FALSE,     # Hide warnings
   message = FALSE,     # Hide messages
   comment = ""         # Prevents appending '##' to beginning of lines in code output
@@ -59,6 +63,9 @@ Groups are named in the following fashion:
 `<life.stage>.<conditioning.treatment>.<acute.treatment>`
 
 This allows for parsing downstream.
+
+NOTE: Below is the full set of groups for the _entire experiment_. For the current qPCR analysis, `seed` and `spat` do _not_ have acute treatments; just conditioning treatments.
+
 ```{r set-sample-groups, eval=TRUE}
 
 seed.control.ambient=c("29", "40", "55", "63", "69", "101", "119", "122", "155", "164", "187", "202", "209", "214", "233", "236", "275")
@@ -80,6 +87,7 @@ adult.treated.high=c("21", "22", "45", "82", "85", "91", "95", "99", "103", "108
 
 ```
 
+## Assign groups to list
 ```{r assign-groups-to-list, eval=TRUE}
 # Combine vectors into lists
 # Used for adding treatment info and/or subsetting downstream
