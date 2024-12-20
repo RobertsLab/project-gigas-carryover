@@ -85,6 +85,8 @@ groups_list <- list(juvenile.control.ambient = juvenile.control.ambient,
 # Functions
 
 ## Calculate delta Cq
+
+Normalized to designated normalizing gene
 ```{r function-delta-Cq}
 calculate_delta_Cq <- function(df) {
   df <- df %>%
@@ -488,15 +490,16 @@ str(grouped_df)
 # Calculate delta Cq by subtracting GAPDH Cq.Mean from each corresponding Sample Cq.Mean
 delta_Cq_df <- calculate_delta_Cq(grouped_df)
 
+# Filters out normalizing gene, since no need to compare normalizing gene to itself.
 delta_Cq_df <- delta_Cq_df %>%
   filter(!is.na(life.stage), !is.na(Target), Target != "GAPDH")
 
 str(delta_Cq_df)
 ```
 
-# t-tests
+## t-tests
 
-## Life Stages
+### Life Stages
 
 This code does the following:
 
@@ -548,7 +551,7 @@ life_stage_t_test_results_df <- bind_rows(life_stage_t_test_results_list, .id = 
 print(life_stage_t_test_results_df)
 ```
 
-## Conditioning treatments
+### Conditioning treatments
 
 This code does the following:
 
@@ -607,7 +610,7 @@ print(conditioning_treatment_t_test_results_df)
 ```
 
 
-## Acute treatments
+### Acute treatments
 
 This code does the following:
 
@@ -671,11 +674,11 @@ print(acute_treatment_t_test_results_df)
 
 ```
 
-# Plotting
+## Plotting
 
-## Delta Cq boxplots
+### Delta Cq boxplots
 
-## Lifestage comparisons
+#### Lifestage comparisons
 ```{r delta-Cq-boxplots-lifestage}
 # Create box plots for each comparison
 unique_comparisons <- unique(life_stage_t_test_results_df$comparison)
@@ -685,7 +688,7 @@ for (comparison in unique_comparisons) {
 }
 ```
 
-## Conditioning comparisons
+### Conditioning comparisons
 ```{r delta-Cq-boxplots-conditioning}
 
 # Create box plots for each comparison
@@ -696,7 +699,7 @@ for (comparison in unique_comparisons) {
 }
 ```
 
-## Acute treatment comparisons
+### Acute treatment comparisons
 ```{r delta-Cq-boxplots-acute-treatment}
 # Create box plots for each comparison
 unique_comparisons <- unique(acute_treatment_t_test_results_df$comparison)
@@ -704,6 +707,60 @@ unique_comparisons <- unique(acute_treatment_t_test_results_df$comparison)
 for (comparison in unique_comparisons) {
   create_boxplot_acute(delta_Cq_df, comparison, acute_treatment_t_test_results_df)
 }
+```
+
+# Delta delta Cq
+
+## Conditioning
+```{r delta-delta-Cq-conditioning}
+# Calculate delta_delta_Cq
+delta_delta_conditioning_fold_change <- delta_Cq_df %>%
+  group_by(life.stage, Target) %>%
+  summarize(
+    treated_delta_Cq = mean(delta_Cq[conditioning.treatment == "treated"], na.rm = TRUE),
+    control_delta_Cq = mean(delta_Cq[conditioning.treatment == "control"], na.rm = TRUE)
+  ) %>%
+  mutate(delta_delta_Cq = treated_delta_Cq - control_delta_Cq) %>%
+  select(life.stage, Target, delta_delta_Cq)
+
+str(delta_delta_conditioning_fold_change)
+```
+
+## Acute treatment
+```{r delta-delta-Cq-seed-spat}
+# Calculate delta_delta_Cq for acute treatment
+delta_delta_Cq_acute_df <- delta_Cq_df %>%
+  group_by(life.stage, Target, acute.treatment) %>%
+  summarize(
+    treated_delta_Cq = mean(delta_Cq[conditioning.treatment == "treated"], na.rm = TRUE),
+    control_delta_Cq = mean(delta_Cq[conditioning.treatment == "control"], na.rm = TRUE)
+  ) %>%
+  mutate(delta_delta_Cq = treated_delta_Cq - control_delta_Cq) %>%
+  select(life.stage, Target, acute.treatment, delta_delta_Cq)
+
+str(delta_delta_Cq_acute_df)
+
+```
+
+
+## Calculate the fold change conditioning comparison
+```{r fold-change-condition}
+delta_delta_conditioning_fold_change <- delta_delta_conditioning_fold_change %>%
+  mutate(fold_change = 2^(-delta_delta_Cq)) %>% 
+  distinct(Target, fold_change)
+
+str(delta_delta_conditioning_fold_change)
+```
+
+## Calculate the fold change acute comparison
+```{r fold-change-acute}
+# Calculate fold change for acute treatment
+delta_delta_acute_fold_change <- delta_delta_Cq_acute_df %>%
+  mutate(fold_change = 2^(-delta_delta_Cq)) %>%
+  distinct(life.stage, Target, acute.treatment, fold_change)
+
+# Display the structure of the resulting data frame
+str(delta_delta_acute_fold_change)
 ```
 
 ---
