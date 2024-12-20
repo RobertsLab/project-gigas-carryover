@@ -900,6 +900,22 @@ delta_delta_Cq_life_stage_df <- delta_Cq_df %>%
 str(delta_delta_Cq_life_stage_df)
 ```
 
+
+```{r delta-delta-Cq-acute-within-life-stage-conditioning, eval=TRUE}
+# Calculate delta_delta_Cq for acute treatment comparisons within each life stage and conditioning treatment
+delta_delta_Cq_acute_within_life_stage_conditioning_df <- delta_Cq_df %>%
+  group_by(life.stage, conditioning.treatment, Target, acute.treatment) %>%
+  summarize(mean_delta_Cq = mean(delta_Cq, na.rm = TRUE)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = acute.treatment, values_from = mean_delta_Cq) %>%
+  mutate(delta_delta_Cq_high_vs_ambient = high - ambient) %>%
+  pivot_longer(cols = starts_with("delta_delta_Cq_"), names_to = "comparison", values_to = "delta_delta_Cq") %>%
+  filter(!is.na(delta_delta_Cq))
+
+# Display the structure of the resulting data frame
+str(delta_delta_Cq_acute_within_life_stage_conditioning_df)
+```
+
 ### Calculate the fold change life stage comparison
 ```{r fold-change-life-stage}
 # Calculate fold change and output to a new data frame
@@ -931,8 +947,43 @@ delta_delta_acute_fold_change <- delta_delta_Cq_acute_df %>%
 str(delta_delta_acute_fold_change)
 ```
 
+```{r fold-change-acute-within-life-stage-conditioning, eval=TRUE}
+# Calculate fold change for acute treatment comparisons within each life stage and conditioning treatment
+fold_change_acute_within_life_stage_conditioning_df <- delta_delta_Cq_acute_within_life_stage_conditioning_df %>%
+  mutate(fold_change = 2^(-delta_delta_Cq))
+
+# Display the structure of the resulting data frame
+str(fold_change_acute_within_life_stage_conditioning_df)
+```
+
 ## Plotting fold changes
 
+```{r bar-plots-fold-change-acute-within-lifestage-conditioning, eval=TRUE, warning=FALSE, message=FALSE}
+library(ggplot2)
+
+# Generate bar plots for each group of comparison within each life stage and conditioning treatment
+plot_list <- fold_change_acute_within_life_stage_conditioning_df %>%
+  split(list(.$life.stage, .$conditioning.treatment, .$comparison)) %>%
+  lapply(function(df) {
+    life_stage <- unique(df$life.stage)
+    conditioning_treatment <- unique(df$conditioning.treatment)
+    comparison_title <- gsub("delta_delta_Cq_", "", unique(df$comparison))
+    comparison_title <- gsub("_vs_", " vs. ", comparison_title)
+    ggplot(df, aes(x = Target, y = fold_change)) +
+      geom_bar(stat = "identity") +
+      labs(title = paste("Gene Expression -", life_stage, "-", conditioning_treatment, "-", comparison_title), 
+           x = "Target", y = "Fold Change") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  })
+
+# Display the plots
+for (plot in plot_list) {
+  print(plot)
+}
+```
+
+### Life stage comparisons
 ```{r bar-plots-fold-change, eval=TRUE}
 
 # Generate bar plots for each group of comparison
@@ -954,7 +1005,7 @@ for (plot in plot_list) {
 }
 ```
 
-
+### Conditioning comparisons
 ```{r barplot-fold-change-conditioning, echo=FALSE, eval=TRUE}
 
 # Create the bar plot
