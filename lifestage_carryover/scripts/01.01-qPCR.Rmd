@@ -378,6 +378,61 @@ create_boxplot_acute <- function(data, comparison, t_test_results) {
 }
 ```
 
+### Acute treatements within life stage conditioning
+```{r function-boxplots-delta-Cq-acute-treatments-within-lifestage-conditioning, eval=TRUE}
+# Function to create box plots for each comparison of acute treatments within life stages and conditioning treatments
+create_boxplot_acute_conditioning <- function(data, comparison, t_test_results) {
+  # Extract life stage, conditioning treatment, and acute treatments from comparison
+  comparison_parts <- unlist(strsplit(comparison, "\\."))
+  life_stage <- comparison_parts[1]
+  conditioning_treatment <- comparison_parts[2]
+  treatment1 <- comparison_parts[3]
+  treatment2 <- comparison_parts[5]
+
+  # Filter data for the relevant life stage, conditioning treatment, and acute treatments
+  filtered_data <- data %>%
+    filter(life.stage == life_stage, conditioning.treatment == conditioning_treatment, acute.treatment %in% c(treatment1, treatment2))
+
+  # Check if both treatments are included
+  if (!all(c(treatment1, treatment2) %in% unique(filtered_data$acute.treatment))) {
+    stop("Not all treatments are included in the filtered data")
+  }
+
+  y_limits <- range(filtered_data$delta_Cq, na.rm = TRUE)
+
+  # Filter t_test_results for the current comparison
+  t_test_results_filtered <- t_test_results %>%
+    filter(comparison == !!comparison)
+
+  # Filter t_test_results for asterisks
+  t_test_results_with_asterisks <- t_test_results_filtered %>%
+    filter(asterisk != "")
+
+  # Format the title
+  formatted_title <- paste0(toupper(substring(life_stage, 1, 1)), substring(life_stage, 2), 
+                            " - ", 
+                            toupper(substring(conditioning_treatment, 1, 1)), substring(conditioning_treatment, 2), 
+                            " - ", 
+                            toupper(substring(treatment1, 1, 1)), substring(treatment1, 2), 
+                            " vs. ", 
+                            toupper(substring(treatment2, 1, 1)), substring(treatment2, 2))
+
+  boxplot <- ggplot(filtered_data, aes(x = Target, y = delta_Cq, fill = acute.treatment)) +
+    geom_boxplot(position = position_dodge(width = 0.75)) +
+    theme_minimal() +
+    theme(legend.position = "right") +
+    scale_fill_manual(values=c("darkgray", "salmon")) +
+    ylim(y_limits) +
+    labs(x = "Target", y = "Delta Cq", title = formatted_title) +
+    # Adds asterisks
+    geom_text(data = t_test_results_with_asterisks, 
+              aes(x = Target, y = y_limits[2] - 1, label = asterisk), 
+              vjust = -0.5, size = 8, color = "black", inherit.aes = FALSE)
+
+  print(boxplot)
+}
+```
+
 # Read in files
 ```{r read-in-Cq-files, eval=TRUE}
 
@@ -780,6 +835,15 @@ for (comparison in unique_comparisons) {
   create_boxplot_acute(delta_Cq_df, comparison, acute_treatment_t_test_results_df)
 }
 ```
+
+### Acute within life stage conditioning
+```{r boxplots-acute-treatments-within-life-stages-conditioning, eval=TRUE}
+# Loop through each comparison in the t-test results and create box plots
+for (comparison in unique(acute_treatment_within_life.stages_conditioning_t_test_results_df$comparison)) {
+  create_boxplot_acute_conditioning(delta_Cq_df, comparison, acute_treatment_within_life.stages_conditioning_t_test_results_df)
+}
+```
+
 
 # Delta delta Cq
 
