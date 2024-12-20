@@ -701,7 +701,7 @@ unique_life_stages <- setdiff(unique_life_stages, c("seed", "spat"))
 unique_conditioning_treatments <- unique(delta_Cq_df$conditioning.treatment)
 
 # Initialize a list to store results
-acute_treatment_t_test_results_list <- list()
+acute_treatment_within_life.stages_conditioning_t_test_results_list <- list()
 
 for (stage in unique_life_stages) {
   for (conditioning in unique_conditioning_treatments) {
@@ -733,17 +733,17 @@ for (stage in unique_life_stages) {
           ) %>%
           select(!t_test_result)
         
-        acute_treatment_t_test_results_list[[paste(stage, conditioning, treatment1, treatment2, sep = ".")]] <- t_test_results
+        acute_treatment_within_life.stages_conditioning_t_test_results_list[[paste(stage, conditioning, treatment1, treatment2, sep = ".")]] <- t_test_results
       }
     }
   }
 }
 
 # Combine results into a single data frame
-acute_treatment_t_test_results_df <- bind_rows(acute_treatment_t_test_results_list, .id = "comparison")
+acute_treatment_within_life.stages_conditioning_t_test_results_df <- bind_rows(acute_treatment_within_life.stages_conditioning_t_test_results_list, .id = "comparison_id")
 
 # View the results
-print(acute_treatment_within_life_stage_condiitioning_t_test_results_df)
+print(acute_treatment_within_life.stages_conditioning_t_test_results_df)
 ```
 
 ## Plotting
