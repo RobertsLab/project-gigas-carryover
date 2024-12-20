@@ -711,7 +711,9 @@ for (comparison in unique_comparisons) {
 
 # Delta delta Cq
 
-## Conditioning
+## Calculations
+
+### Conditioning
 ```{r delta-delta-Cq-conditioning}
 # Calculate delta_delta_Cq
 delta_delta_conditioning_fold_change <- delta_Cq_df %>%
@@ -726,8 +728,8 @@ delta_delta_conditioning_fold_change <- delta_Cq_df %>%
 str(delta_delta_conditioning_fold_change)
 ```
 
-## Acute treatment
-```{r delta-delta-Cq-seed-spat}
+### Acute treatment
+```{r delta-delta-Cq-acute}
 # Calculate delta_delta_Cq for acute treatment
 delta_delta_Cq_acute_df <- delta_Cq_df %>%
   group_by(life.stage, Target, acute.treatment) %>%
@@ -743,7 +745,7 @@ str(delta_delta_Cq_acute_df)
 ```
 
 
-## Calculate the fold change conditioning comparison
+### Calculate the fold change conditioning comparison
 ```{r fold-change-condition}
 delta_delta_conditioning_fold_change <- delta_delta_conditioning_fold_change %>%
   mutate(fold_change = 2^(-delta_delta_Cq)) %>% 
@@ -752,7 +754,8 @@ delta_delta_conditioning_fold_change <- delta_delta_conditioning_fold_change %>%
 str(delta_delta_conditioning_fold_change)
 ```
 
-## Calculate the fold change acute comparison
+
+### Calculate the fold change acute comparison
 ```{r fold-change-acute}
 # Calculate fold change for acute treatment
 delta_delta_acute_fold_change <- delta_delta_Cq_acute_df %>%
@@ -761,6 +764,37 @@ delta_delta_acute_fold_change <- delta_delta_Cq_acute_df %>%
 
 # Display the structure of the resulting data frame
 str(delta_delta_acute_fold_change)
+```
+
+## Plotting fold changes
+```{r barplot-fold-change-conditioning, echo=FALSE}
+
+# Create the bar plot
+ggplot(delta_delta_conditioning_fold_change, aes(x = Target, y = fold_change, fill = Target)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ life.stage, scales = "free_x") +
+  theme_minimal() +
+  labs(title = "Fold Change in Conditioning Expression by Target and Life Stage",
+       x = "Target",
+       y = "Fold Change") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r lineplot-fold-change-conditioning, echo=FALSE}
+# Ensure life.stage is a factor with the correct order
+delta_delta_conditioning_fold_change$life.stage <- factor(delta_delta_conditioning_fold_change$life.stage,
+                                                          levels = c("seed", "spat", "juvenile", "adult"))
+
+# Create the line plot
+ggplot(delta_delta_conditioning_fold_change, aes(x = life.stage, y = fold_change, color = Target, group = Target)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Fold Change in Conditioning Expression by Target and Life Stage",
+       x = "Life Stage",
+       y = "Fold Change") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0, NA)
 ```
 
 ---
