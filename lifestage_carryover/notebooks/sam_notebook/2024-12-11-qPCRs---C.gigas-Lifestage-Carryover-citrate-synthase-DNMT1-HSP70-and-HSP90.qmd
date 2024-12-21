@@ -1,0 +1,302 @@
+---
+author: Sam White
+toc-title: Contents
+toc-depth: 5
+toc-location: left
+title: qPCRs - C.gigas Lifestage Carryover citrate synthase DNMT1 HSP70 and HSP90
+date: '2024-12-11'
+draft: false
+engine: knitr
+categories: 
+  - "2024"
+  - "Crassostrea gigas"
+  - "Pacific oyster"
+  - "SsoFast"
+  - "CFX Connect"
+  - "CFX96"
+  - "project-gigas-carryover"
+  - "citrate synthase"
+  - "DNMT1"
+  - "HSP70"
+  - "HSP90"
+image: "/posts/2024/2024-12-11-qPCRs---C.gigas-Lifestage-Carryover-citrate-synthase-DNMT1-HSP70-and-HSP90/20241211-citrate_synthase-amp-plot-01.png"
+---
+# INTRO
+
+Continuing work with [`project-gigas-carryover` lifestage_carryover](https://github.com/RobertsLab/project-gigas-carryover/tree/main/lifestage_carryover) (GitHub repo) after [creating cDNA on 20241024](../2024-10-24-Reverse-Transcription---C.gigas-Lifestage-Carryover-RNA/index.qmd), it was finally time to run the qPCRs. Three primer sets [were run yesterday, 20241210](../2024-12-10-qPCRs---C.gigas-Lifestage-Carryover-GAPDH-ATP_synthase-and-cGAS/index.qmd): GAPDH, ATP synthase, and cGAS.
+
+This notebook describes how the qPCRs were run and links to the various output files. It also provides a brief overview of each primer set's amplification profiles. This notebook does _not_ have any analysis. This will be performed later.
+
+::: {.callout-note}
+Due to unequal quantities of RNA used to make cDNA, information from Cq values will not provide meaningful information without normalization first.
+:::
+
+# MATERIALS & METHODS
+
+Based on [results from an initial round of qPCRs on 20240327](../2024-03-27-qPCR-Analysis---C.gigas-Lifestages-Carryover-from-20240325/index.qmd) (Notebook entry), the following primer sets were selected:
+
+| SR ID | Primer Name          |
+|-------|----------------------|
+| 1383  | Cg_citratesynthase_F |
+| 1384  | Cg_citratesynthase_R |
+| 599   | Cg_HSP70_F           |
+| 598   | Cg_HSP70_R           |
+| 1532  | Cg_Hsp90_F           |
+| 1533  | Cg_Hsp90_R           |
+| 1510  | Cg_DNMT1_F           |
+| 1511  | Cg_DNMT1_R           |
+
+All samples were run in triplicate, on low-profile, white 96-well plates (USA Scientific) in a CFX Connect (Bio-Rad) or CFX96 (Bio-Rad) real-time thermalcycler. All reactions consisted of the following:
+
+| Component                                          | Stock Concentration | Volume (uL) |
+|----------------------------------------------------|---------------------|-------------|
+| cDNA                                               | NA                  | 1           |
+| SsoAdvanced Universal SYBR Green Supermix (BioRad) | 2x                  | 10          |
+| P<sub>F</sub>                                      | 10uM                | 0.5         |
+| P<sub>R</sub>                                      | 10uM                | 0.5         |
+| H<sub>2</sub>O                                     | NA                  | 8           |
+| TOTAL                                              |                     | 20          |
+
+Master mixes were distributed across 2.5 plates for each primer set. No template controls (NTC) were loaded on on just one of the three plates (plate #3 in all instances).
+
+For cycling parameters, plate layouts, etc. see the [RESULTS](#results) section below.
+
+
+# RESULTS
+
+
+## Summary
+
+- `Citrate synthase`: Amplification and melt plots look good. Of note, amplification in `243` is noticeably later than all other samples. No amplification in NTCs. Reps are tight.
+
+- `DNMT1`: Amplification and melt plots look good. No amplification in NTCs.
+
+- `HSP70`: Amplification and melt plots look good. No amplification in NTCs. Sample `244` has a _terrible_ set of reps (std. dev. of 4!!). All other reps are tight.
+
+- `HSP90`: Amplification and melt plots look good. No amplification in NTCs.
+
+## Files
+
+::: {.callout-tip}
+
+- `*.pdf`: qPCR Reports. Contains plate layouts, cycling params, amp/melt plots, etc.
+
+- `*Amplification-Results_SYBR.csv`: Raw fluorescence data.
+
+- `*Cq-Results.csv`: Cycle quantity (Cq) data.
+
+- `*.pcrd`: Source qPCR data file. Requires CFX Maestro (Bio-Rad) software to open.
+
+All files linked below are from commit `e816421`.
+
+:::
+
+### Citrate synthase
+
+#### Cq Data
+
+- [`sam_2024-12-11_06-45-17_Connect-citrate_synthase-01-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_06-45-17_Connect-citrate_synthase-01-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_07-40-52_Connect-citrate_synthase-03-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_07-40-52_Connect-citrate_synthase-03-Quantification-Cq-Results.csv)
+
+
+#### Reports
+
+- [`sam_2024-12-11_06-45-17_Connect-citrate_synthase-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_06-45-17_Connect-citrate_synthase-01.pdf)
+
+- [`sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02.pdf)
+
+- [`sam_2024-12-11_07-40-52_Connect-citrate_synthase-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_07-40-52_Connect-citrate_synthase-03.pdf)
+
+
+#### Raw fluorescence
+
+- [`sam_2024-12-11_06-45-17_Connect-citrate_synthase-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_06-45-17_Connect-citrate_synthase-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_07-40-52_Connect-citrate_synthase-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_07-40-52_Connect-citrate_synthase-03-Quantification-Amplification-Results_SYBR.csv)
+
+#### CFX Files
+
+- [`sam_2024-12-11_06-45-17_Connect-citrate_synthase-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_06-45-17_Connect-citrate_synthase-01.pcrd)
+
+- [`sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_07-03-42_CFX96-citrate_synthase-02.pcrd)
+
+- [`sam_2024-12-11_07-40-52_Connect-citrate_synthase-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_07-40-52_Connect-citrate_synthase-03.pcrd)
+
+
+### DNMT1
+
+#### Cq Data
+
+- [`sam_2024-12-11_08-01-43_CFX96-DNMT1-01-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_08-01-43_CFX96-DNMT1-01-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_08-34-08_Connect-DNMT1-02-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_08-34-08_Connect-DNMT1-02-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_08-50-51_CFX96-DNMT1-03-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_08-50-51_CFX96-DNMT1-03-Quantification-Cq-Results.csv)
+
+#### Reports
+
+- [`sam_2024-12-11_08-01-43_CFX96-DNMT1-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_08-01-43_CFX96-DNMT1-01.pdf)
+
+- [`sam_2024-12-11_08-34-08_Connect-DNMT1-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_08-34-08_Connect-DNMT1-02.pdf)
+
+- [`sam_2024-12-11_08-50-51_CFX96-DNMT1-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_08-50-51_CFX96-DNMT1-03.pdf)
+
+#### Raw fluorescence
+
+- [`sam_2024-12-11_08-01-43_CFX96-DNMT1-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_08-01-43_CFX96-DNMT1-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_08-34-08_Connect-DNMT1-02-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_08-34-08_Connect-DNMT1-02-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_08-50-51_CFX96-DNMT1-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_08-50-51_CFX96-DNMT1-03-Quantification-Amplification-Results_SYBR.csv)
+
+
+#### CFX Files
+
+- [`sam_2024-12-11_08-01-43_CFX96-DNMT1-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_08-01-43_CFX96-DNMT1-01.pcrd)
+
+- [`sam_2024-12-11_08-34-08_Connect-DNMT1-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_08-34-08_Connect-DNMT1-02.pcrd)
+
+- [`sam_2024-12-11_08-50-51_CFX96-DNMT1-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_08-50-51_CFX96-DNMT1-03.pcrd)
+
+### HSP70
+
+#### Cq Data
+
+- [`sam_2024-12-11_09-30-51_Connect-HSP70-01-Quantificatio-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_09-30-51_Connect-HSP70-01-Quantificatio-Cq-Results.csv)
+
+- [`sam_2024-12-11_09-47-17_CFX96-HSP70-02-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_09-47-17_CFX96-HSP70-02-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_10-25-40_Connect-HSP70-03-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_10-25-40_Connect-HSP70-03-Quantification-Cq-Results.csv)
+
+#### Reports
+
+- [`sam_2024-12-11_09-30-51_Connect-HSP70-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_09-30-51_Connect-HSP70-01.pdf)
+
+- [`sam_2024-12-11_09-47-17_CFX96-HSP70-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_09-47-17_CFX96-HSP70-02.pdf)
+
+- [`sam_2024-12-11_10-25-40_Connect-HSP70-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_10-25-40_Connect-HSP70-03.pdf)
+
+#### Raw fluorescence
+
+- [`sam_2024-12-11_09-30-51_Connect-HSP70-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_09-30-51_Connect-HSP70-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_09-47-17_CFX96-HSP70-0-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_09-47-17_CFX96-HSP70-0-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_10-25-40_Connect-HSP70-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_10-25-40_Connect-HSP70-03-Quantification-Amplification-Results_SYBR.csv)
+
+#### CFX Files
+
+- [`sam_2024-12-11_09-30-51_Connect-HSP70-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_09-30-51_Connect-HSP70-01.pcrd)
+
+- [`sam_2024-12-11_09-47-17_CFX96-HSP70-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_09-47-17_CFX96-HSP70-02.pcrd)
+
+- [`sam_2024-12-11_10-25-40_Connect-HSP70-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_10-25-40_Connect-HSP70-03.pcrd)
+
+### HSP90
+
+#### Cq Data
+
+- [`sam_2024-12-11_10-42-40_CFX96-HSP90-01-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_10-42-40_CFX96-HSP90-01-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_11-15-25_Connect-HSP90-02-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_11-15-25_Connect-HSP90-02-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-11_11-32-27_CFX96-HSP90-03-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-11_11-32-27_CFX96-HSP90-03-Quantification-Cq-Results.csv)
+
+#### Reports
+
+- [`sam_2024-12-11_10-42-40_CFX96-HSP90-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_10-42-40_CFX96-HSP90-01.pdf)
+
+- [`sam_2024-12-11_11-15-25_Connect-HSP90-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_11-15-25_Connect-HSP90-02.pdf)
+
+- [`sam_2024-12-11_11-32-27_CFX96-HSP90-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-11_11-32-27_CFX96-HSP90-03.pdf)
+
+#### Raw fluorescence
+
+- [`sam_2024-12-11_10-42-40_CFX96-HSP90-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_10-42-40_CFX96-HSP90-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_11-15-25_Connect-HSP90-02-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_11-15-25_Connect-HSP90-02-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-11_11-32-27_CFX96-HSP90-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-11_11-32-27_CFX96-HSP90-03-Quantification-Amplification-Results_SYBR.csv)
+
+#### CFX Files
+
+- [`sam_2024-12-11_10-42-40_CFX96-HSP90-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_10-42-40_CFX96-HSP90-01.pcrd)
+
+- [`sam_2024-12-11_11-15-25_Connect-HSP90-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_11-15-25_Connect-HSP90-02.pcrd)
+
+- [`sam_2024-12-11_11-32-27_CFX96-HSP90-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-11_11-32-27_CFX96-HSP90-03.pcrd)
+
+## Plots
+
+::: {#fig-citrate_synthase layout-ncol=2}
+
+![Citrate synthase Amplification plot Plate 01](./20241211-citrate_synthase-amp-plot-01.png){#fig-citrate_synthase_amplification_p1}
+
+![Citrate synthase Melt plotPlate 01](./20241211-citrate_synthase-melt-plot-01.png){#fig-citrate_synthase_melt_p1}
+
+![Citrate synthase Amplification plot Plate 02](./20241211-citrate_synthase-amp-plot-02.png){#fig-citrate_synthase_amplification_p2}
+
+![Citrate synthase Melt plotPlate 02](./20241211-citrate_synthase-melt-plot-02.png){#fig-citrate_synthase_melt_p2}
+
+![Citrate synthase Amplification plot Plate 03](./20241211-citrate_synthase-amp-plot-03.png){#fig-citrate_synthase_amplification_p3}
+
+![Citrate synthase Melt plotPlate 03](./20241211-citrate_synthase-melt-plot-03.png){#fig-citrate_synthase_melt_p3}
+
+Citrate synthase qPCR Plots
+:::
+
+::: {#fig-DNMT1 layout-ncol=2}
+
+![DNMT1 Amplification plot Plate 01](./20241211-DNMT1-amp-plot-01.png){#fig-DNMT1_amplification_p1}
+
+![DNMT1 Melt plotPlate 01](./20241211-DNMT1-melt-plot-01.png){#fig-DNMT1_melt_p1}
+
+![DNMT1 Amplification plot Plate 02](./20241211-DNMT1-amp-plot-02.png){#fig-DNMT1_amplification_p2}
+
+![DNMT1 Melt plotPlate 02](./20241211-DNMT1-melt-plot-02.png){#fig-DNMT1_melt_p2}
+
+![DNMT1 Amplification plot Plate 03](./20241211-DNMT1-amp-plot-03.png){#fig-DNMT1_amplification_p3}
+
+![DNMT1 Melt plotPlate 03](./20241211-DNMT1-melt-plot-03.png){#fig-DNMT1_melt_p3}
+
+DNMT1 qPCR Plots
+:::
+
+::: {#fig-HSP70 layout-ncol=2}
+
+![HSP70 Amplification plot Plate 01](./20241211-HSP70-amp-plot-01.png){#fig-HSP70_amplification_p1}
+
+![HSP70 Melt plotPlate 01](./20241211-HSP70-melt-plot-01.png){#fig-HSP70_melt_p1}
+
+![HSP70 Amplification plot Plate 02](./20241211-HSP70-amp-plot-02.png){#fig-HSP70_amplification_p2}
+
+![HSP70 Melt plotPlate 02](./20241211-HSP70-melt-plot-02.png){#fig-HSP70_melt_p2}
+
+![HSP70 Amplification plot Plate 03](./20241211-HSP70-amp-plot-03.png){#fig-HSP70_amplification_p3}
+
+![HSP70 Melt plotPlate 03](./20241211-HSP70-melt-plot-03.png){#fig-HSP70_melt_p3}
+
+HSP70 qPCR Plots
+:::
+
+::: {#fig-HSP90 layout-ncol=2}
+
+![HSP90 Amplification plot Plate 01](./20241211-HSP90-amp-plot-01.png){#fig-HSP90_amplification_p1}
+
+![HSP90 Melt plotPlate 01](./20241211-HSP90-melt-plot-01.png){#fig-HSP90_melt_p1}
+
+![HSP90 Amplification plot Plate 02](./20241211-HSP90-amp-plot-02.png){#fig-HSP90_amplification_p2}
+
+![HSP90 Melt plotPlate 02](./20241211-HSP90-melt-plot-02.png){#fig-HSP90_melt_p2}
+
+![HSP90 Amplification plot Plate 03](./20241211-HSP90-amp-plot-03.png){#fig-HSP90_amplification_p3}
+
+![HSP90 Melt plotPlate 03](./20241211-HSP90-melt-plot-03.png){#fig-HSP90_melt_p3}
+
+HSP90 qPCR Plots
+:::

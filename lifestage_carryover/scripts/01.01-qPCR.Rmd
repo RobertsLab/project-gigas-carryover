@@ -1060,21 +1060,23 @@ ggplot(delta_delta_acute_fold_change, aes(x = Target, y = fold_change, fill = ac
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-
-
 # Running linear models 
 
 ## ANOVA models 
 
-```{r}
+```{r, eval=TRUE}
 hist(delta_Cq_df$delta_Cq)
 ```
 
 Run an anova model to test for effects of lifestage, conditioning, and acute treatment on delta Cq values for each target. 
 
-ATP synthase
-```{r}
+### ATP synthase
+
+ATP synthase is an enzyme complex that functions to synthesize adenosine triphosphate (ATP) from adenosine diphosphate (ADP) and inorganic phosphate (Pi), essentially generating the cell's primary energy currency by harnessing the energy from a proton gradient across a membrane. 
+
+```{r, eval=TRUE}
 library(car)
+library(emmeans)
 
 model<-delta_Cq_df%>%
   filter(Target=="ATPsynthase")%>%
@@ -1084,11 +1086,16 @@ model<-delta_Cq_df%>%
 summary(model)
 
 qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="ATPsynthase"))
 ```
 No significant effects.  
 
-DNMT1
-```{r}
+### DNMT1
+
+The DNMT1 gene provides instructions for making an enzyme called DNA methyltransferase 1. This enzyme is involved in DNA methylation, which is the addition of methyl groups, consisting of one carbon atom and three hydrogen atoms, to DNA molecules.
+
+```{r, eval=TRUE}
 
 model<-delta_Cq_df%>%
   filter(Target=="DNMT1")%>%
@@ -1098,11 +1105,16 @@ model<-delta_Cq_df%>%
 summary(model)
 
 qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="DNMT1"))
 ```
 No significant effects. 
 
-HSP70
-```{r}
+### HSP70
+
+Heat Shock Protein 70 (Hsp70) is a molecular chaperone that plays crucial roles in maintaining cellular protein homeostasis and protecting cells from stress. 
+
+```{r, eval=TRUE}
 
 model<-delta_Cq_df%>%
   filter(Target=="HSP70")%>%
@@ -1112,12 +1124,19 @@ model<-delta_Cq_df%>%
 summary(model)
 
 qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="HSP70"))
+
+emm<-emmeans(model, ~ conditioning.treatment:acute.treatment | life.stage)
+pairs(emm)
 ```
 Significant effect of conditioning x acute treatment. 
 
-HSP90
-```{r}
+### HSP90
 
+Heat shock protein 90 (Hsp90) is a molecular chaperone that helps proteins fold, mature, and remain active. Hsp90 also helps regulate signaling networks and is involved in many cellular processes.
+
+```{r, eval=TRUE}
 model<-delta_Cq_df%>%
   filter(Target=="HSP90")%>%
   
@@ -1126,11 +1145,19 @@ model<-delta_Cq_df%>%
 summary(model)
 
 qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="HSP90"))
+
+emm<-emmeans(model, ~ conditioning.treatment:acute.treatment | life.stage)
+pairs(emm)
 ```
 Significant effect of lifestage x acute treatment, lifestage x conditioning treatment, acute treatment, and lifestage. 
 
-cGAS
-```{r}
+### cGAS
+
+The cGAS gene is involved in several processes, including cellular response to exogenous dsRNA, positive regulation of intracellular signal transduction, and regulation of defense response.
+
+```{r, eval=TRUE}
 
 model<-delta_Cq_df%>%
   filter(Target=="cGAS")%>%
@@ -1140,12 +1167,19 @@ model<-delta_Cq_df%>%
 summary(model)
 
 qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="cGAS"))
+
+emm<-emmeans(model, ~ conditioning.treatment:acute.treatment | life.stage)
+pairs(emm)
 ```
 Significant effect of lifestage x acute treatment and lifestage.  
 
-Citrate synthase 
-```{r}
+### Citrate synthase 
 
+Citrate synthase is important for energy production in the TCA cycle and is linked to the electron transport chain. It is also used as an enzyme marker for intact mitochondria.
+
+```{r, eval=TRUE}
 model<-delta_Cq_df%>%
   filter(Target=="citrate synthase")%>%
   
@@ -1154,12 +1188,30 @@ model<-delta_Cq_df%>%
 summary(model)
 
 qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="citrate synthase"))
+
+emm<-emmeans(model, ~ conditioning.treatment:acute.treatment | life.stage)
+pairs(emm)
 ```
 Significant effect of acute treatment and lifestage x acute treatment.  
+
+All tests pass normality and homogeneity of variance. ANOVA tests are appropriate. 
 
 ## Plotting 
 
 Display plot of acute x conditioning treatment faceted for each lifestage for each target.  
+
+Show sample size for each group. 
+```{r, eval=TRUE}
+delta_Cq_df%>%
+  group_by(life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(n=length(unique(Sample)))
+```
+
+Note that sample sizes for spat, seed, or juveniles that are <6 are due to lack of RNA isolated from the samples. 
+
+Adults were all sampled from one family (Pink). Previous flow cytometry was unclear as to diploid or triploid classification. We have extracted DNA that we can use to verify ploidy. 
 
 ### ATP synthase: No effects
 ```{r, eval=TRUE}
@@ -1196,7 +1248,7 @@ plot2<-delta_Cq_df%>%
   scale_colour_manual(values=c("darkgray", "orange"))+
   geom_line(aes(group=conditioning.treatment))+
   geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
-  ggtitle("DNMT (no sign. effects)")+
+  ggtitle("DMNT1 (no sign. effects)")+
   ylab("Delta Cq")+
   geom_hline(yintercept=0, linetype="dashed")+
   ylim(0,9)+
@@ -1305,8 +1357,21 @@ plot6<-delta_Cq_df%>%
   theme_classic();plot6
 ```
 
-The HSP genes show effects of conditioning. The other genes show effects of lifestage and/or acute stress. 
+## Conclusions 
 
-Lifestage specific stress responses. 
+### Effects of conditioning on acute stress response   
+
+- HSP70 and 90 genes are affected by conditioning. 
+- HSP90 has significantly higher expression in treated adults than control adults at elevated temperature. No other lifestages have significant differences in expression between conditioning treatments at high temperature.  
+- HSP70 has significantly lower expression in treated spat than control spat at elevated temperature. No other lifestages have significant differences between conditioning treatments at high temperature. 
+
+### Effects of acute stress and lifestage 
+
+- Across lifestages (except for juveniles) HSP90 decreases in expression under elevated temperature. 
+- Expression of cGAS increases most dramatically in seed under elevated temperature. 
+- ATP synthase and DMNT1 are not affected by elevated temperature. 
+- Citrate synthase increases in expression in seed and spat under elevated temperature, but does not change in adult or juvenile stages. 
+- Effects of acute treatment and life stage are just barely not significant for ATPsynthase and DMNT1. It is particularly interesting to see the trend for higher DMNT1 expression in spat at ambient temperature. There is also a trend for lower expression of ATPsynthase in seed at high temperature, but not technically significant.  
+
 
 

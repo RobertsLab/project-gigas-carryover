@@ -1,0 +1,257 @@
+---
+author: Sam White
+toc-title: Contents
+toc-depth: 5
+toc-location: left
+title: qPCRs - C.gigas Lifestage Carryover GAPDH ATP_synthase and cGAS
+date: '2024-12-10'
+draft: false
+engine: knitr
+categories: 
+  - "2024"
+  - "Crassostrea gigas"
+  - "Pacific oyster"
+  - "GAPDH"
+  - "ATP synthase"
+  - "cGAS"
+  - "SsoFast"
+  - "CFX Connect"
+  - "CFX96"
+  - "project-gigas-carryover"
+---
+# INTRO
+
+Continuing work with [`project-gigas-carryover` lifestage_carryover](https://github.com/RobertsLab/project-gigas-carryover/tree/main/lifestage_carryover) (GitHub repo) after [creating cDNA on 20241024](../2024-10-24-Reverse-Transcription---C.gigas-Lifestage-Carryover-RNA/index.qmd), it was finally time to run the qPCRs.
+
+This notebook describes how the qPCRs were run and links to the various output files. It also provides a brief overview of each primer set's amplification profiles. This notebook does _not_ have any analysis. This will be performed later.
+
+# MATERIALS & METHODS
+
+Based on [results from an initial round of qPCRs on 20240327](../2024-03-27-qPCR-Analysis---C.gigas-Lifestages-Carryover-from-20240325/index.qmd) (Notebook entry), the following primer sets were selected:
+
+| SR ID | Primer Name          |
+|-------|----------------------|
+| 1385  | Cg_ATPsynthase_F     |
+| 1386  | Cg_ATPsynthase_R     |
+| 1172  | Cg_GAPDH_205_F       |
+| 1173  | Cg_GAPDH_355_R       |
+| 1827  | Cg_cGAS_F            |
+| 1826  | Cg_cGAS_R            |
+
+All samples were run in triplicate, on low-profile, white 96-well plates (USA Scientific) in a CFX Connect (Bio-Rad) or CFX96 (Bio-Rad) real-time thermalcycler. All reactions consisted of the following:
+
+| Component                                          | Stock Concentration | Volume (uL) |
+|----------------------------------------------------|---------------------|-------------|
+| cDNA                                               | NA                  | 1           |
+| SsoAdvanced Universal SYBR Green Supermix (BioRad) | 2x                  | 10          |
+| P<sub>F</sub>                                      | 10uM                | 0.5         |
+| P<sub>R</sub>                                      | 10uM                | 0.5         |
+| H<sub>2</sub>O                                     | NA                  | 8           |
+| TOTAL                                              |                     | 20          |
+
+Master mixes were distributed across 2.5 plates for each primer set. No template controls (NTC) were loaded on on just one of the three plates (plate #3 in all instances).
+
+For cycling parameters, plate layouts, etc. see the [RESULTS](#results) section below.
+
+
+# RESULTS
+
+
+## Summary
+
+- `GAPDH`: Based on [previous qPCR results in the project](../2024-03-25-qPCRs---C.gigas-Lifestage-Carryover-cDNA/index.qmd) (Notebook entry), this is intended to serve as the normalizing gene in this experiment. Amplification and melt plots look fine. Late amplification in NTCs, but melt temp peak is noticeably lower than other amplicons. As such, this is not concerning. Technical reps look good.
+
+::: {.callout-note}
+Despite the apparent wide spread in Cq values, it should be noted that there are differences in the amount of RNA used to make cDNA, which could easily lead to such results.
+:::
+
+- `ATP Synthase`: Amplification and melt plots look good. No amplification in NTCs. Reps are tight.
+
+- `cGAS`: Amplification and melt plots look good. Late amplification in NTCs, but melt temp peak is ~2<sup>o</sup>C lower than other amplicons... Might be some non-specific amplification? Reps are tight.
+
+## Files
+
+::: {.callout-tip}
+
+- `*.pdf`: qPCR Reports. Contains plate layouts, cycling params, amp/melt plots, etc.
+
+- `*Amplification-Results_SYBR.csv`: Raw fluorescence data.
+
+- `*Cq-Results.csv`: Cycle quantity (Cq) data.
+
+- `*.pcrd`: Source qPCR data file. Requires CFX Maestro (Bio-Rad) software to open.
+
+All files linked below are from commit `e816421`.
+
+:::
+
+### GAPDH
+
+#### Cq Data
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-01-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-10-11-46-04_Connect-GAPDH-01-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-10_11-47-51_CFX96_GAPDH-02-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-10_11-47-51_CFX96_GAPDH-02-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-03-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-10-11-46-04_Connect-GAPDH-03-Quantification-Cq-Results.csv)
+
+#### Reports
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10-11-46-04_Connect-GAPDH-01.pdf)
+
+- [`sam_2024-12-10_11-47-51_CFX96_GAPDH-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_11-47-51_CFX96_GAPDH-02.pdf)
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10-11-46-04_Connect-GAPDH-03.pdf)
+
+
+#### Raw fluorescence
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10-11-46-04_Connect-GAPDH-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-10_11-47-51_CFX96_GAPDH-02-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_11-47-51_CFX96_GAPDH-02-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10-11-46-04_Connect-GAPDH-03-Quantification-Amplification-Results_SYBR.csv)
+
+
+#### CFX Files
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10-11-46-04_Connect-GAPDH-01.pcrd)
+
+- [`sam_2024-12-10_11-47-51_CFX96_GAPDH-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_11-47-51_CFX96_GAPDH-02.pcrd)
+
+- [`sam_2024-12-10-11-46-04_Connect-GAPDH-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10-11-46-04_Connect-GAPDH-03.pcrd)
+
+
+### ATP Synthase
+
+#### Cq Data
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-01-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-10_14-48-30_Connect-ATP_synthase-01-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02-Quantification-Cq-Results.csv)
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-03-Quantification-Cq-Results.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/Cq/sam_2024-12-10_14-48-30_Connect-ATP_synthase-03-Quantification-Cq-Results.csv)
+
+
+#### Reports
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_14-48-30_Connect-ATP_synthase-01.pdf)
+
+- [`sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02.pdf)
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_14-48-30_Connect-ATP_synthase-03.pdf)
+
+
+#### Raw fluorescence
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_14-48-30_Connect-ATP_synthase-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_14-48-30_Connect-ATP_synthase-03-Quantification-Amplification-Results_SYBR.csv)
+
+
+
+#### CFX Files
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_14-48-30_Connect-ATP_synthase-01.pcrd)
+
+- [`sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_15-07-24_CFX96-ATP_synthase-02.pcrd)
+
+- [`sam_2024-12-10_14-48-30_Connect-ATP_synthase-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_14-48-30_Connect-ATP_synthase-03.pcrd)
+
+
+
+### cGAS
+
+#### Cq Data
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_16-01-52_CFX96-cGAS-01.pcrd)
+
+- [`sam_2024-12-10_16-30-41_Connect-cGAS-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_16-30-41_Connect-cGAS-02.pcrd)
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_16-01-52_CFX96-cGAS-03.pcrd)
+
+
+#### Reports
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-01.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_16-01-52_CFX96-cGAS-01.pdf)
+
+- [`sam_2024-12-10_16-30-41_Connect-cGAS-02.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_16-30-41_Connect-cGAS-02.pdf)
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-03.pdf`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/reports/sam_2024-12-10_16-01-52_CFX96-cGAS-03.pdf)
+
+
+
+#### Raw fluorescence
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-01-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_16-01-52_CFX96-cGAS-01-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-10_16-30-41_Connect-cGAS-02-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_16-30-41_Connect-cGAS-02-Quantification-Amplification-Results_SYBR.csv)
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-03-Quantification-Amplification-Results_SYBR.csv`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/raw_fluorescence/sam_2024-12-10_16-01-52_CFX96-cGAS-03-Quantification-Amplification-Results_SYBR.csv)
+
+
+#### CFX Files
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-01.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_16-01-52_CFX96-cGAS-01.pcrd)
+
+- [`sam_2024-12-10_16-30-41_Connect-cGAS-02.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_16-30-41_Connect-cGAS-02.pcrd)
+
+- [`sam_2024-12-10_16-01-52_CFX96-cGAS-03.pcrd`](https://github.com/RobertsLab/project-gigas-carryover/tree/e816421f8beae1dca580eb451939965f4ed5aa3e/lifestage_carryover/data/qPCR/cfx_connect/sam_2024-12-10_16-01-52_CFX96-cGAS-03.pcrd)
+
+
+## Plots
+
+::: {#fig-GAPDH layout-ncol=2}
+
+![GAPDH Amplification plot Plate 01](./20241210-GAPDH-amp-plot-01.png){#fig-GAPDH_amplification_p1}
+
+![GAPDH Melt plotPlate 01](./20241210-GAPDH-melt-plot-01.png){#fig-GAPDH_melt_p1}
+
+![GAPDH Amplification plot Plate 02](./20241210-GAPDH-amp-plot-02.png){#fig-GAPDH_amplification_p2}
+
+![GAPDH Melt plotPlate 02](./20241210-GAPDH-melt-plot-02.png){#fig-GAPDH_melt_p2}
+
+![GAPDH Amplification plot Plate 03](./20241210-GAPDH-amp-plot-03.png){#fig-GAPDH_amplification_p3}
+
+![GAPDH Melt plotPlate 03](./20241210-GAPDH-melt-plot-03.png){#fig-GAPDH_melt_p3}
+
+GAPDH qPCR Plots
+:::
+
+
+::: {#fig-ATP_synthase layout-ncol=2}
+
+![ATP synthase Amplification plot Plate 01](./20241210-ATP_synthase-amp-plot-01.png){#fig-ATP_synthase_amplification_p1}
+
+![ATP synthase Melt plotPlate 01](./20241210-ATP_synthase-melt-plot-01.png){#fig-ATP_synthase_melt_p1}
+
+![ATP synthase Amplification plot Plate 02](./20241210-ATP_synthase-amp-plot-02.png){#fig-ATP_synthase_amplification_p2}
+
+![ATP synthase Melt plotPlate 02](./20241210-ATP_synthase-melt-plot-02.png){#fig-ATP_synthase_melt_p2}
+
+![ATP synthase Amplification plot Plate 03](./20241210-ATP_synthase-amp-plot-03.png){#fig-ATP_synthase_amplification_p3}
+
+![ATP synthase Melt plotPlate 03](./20241210-ATP_synthase-melt-plot-03.png){#fig-ATP_synthase_melt_p3}
+
+ATP synthase qPCR Plots
+:::
+
+
+::: {#fig-cGAS layout-ncol=2}
+
+![cGAS Amplification plot Plate 01](./20241210-cGAS-amp-plot-01.png){#fig-cGAS_amplification_p1}
+
+![cGAS Melt plotPlate 01](./20241210-cGAS-melt-plot-01.png){#fig-cGAS_melt_p1}
+
+![cGAS Amplification plot Plate 02](./20241210-cGAS-amp-plot-02.png){#fig-cGAS_amplification_p2}
+
+![cGAS Melt plotPlate 02](./20241210-cGAS-melt-plot-02.png){#fig-cGAS_melt_p2}
+
+![cGAS Amplification plot Plate 03](./20241210-cGAS-amp-plot-03.png){#fig-cGAS_amplification_p3}
+
+![cGAS Melt plotPlate 03](./20241210-cGAS-melt-plot-03.png){#fig-cGAS_melt_p3}
+
+cGAS qPCR Plots
+:::
