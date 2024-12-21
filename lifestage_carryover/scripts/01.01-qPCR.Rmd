@@ -481,7 +481,7 @@ combined_df$Target <- gsub("Cg_ATPsynthase_F/R \\(SR IDs: 1385/6\\)", "ATPsyntha
 
 combined_df$Target <- gsub("Cg_cGAS \\(SR IDs: 1826/7\\)", "cGAS", combined_df$Target)
 
-combined_df$Target <- gsub("Cg_citrate_synthase \\(SR IDs: 1383/4\\)", "citrate.sythase", combined_df$Target)
+combined_df$Target <- gsub("Cg_citrate_synthase \\(SR IDs: 1383/4\\)", "citrate synthase", combined_df$Target)
 
 combined_df$Target <- gsub("Cg_DNMT1_F \\(SR IDs: 1510/1\\)", "DNMT1", combined_df$Target)
 
@@ -489,12 +489,12 @@ combined_df$Target <- gsub("Cg_HSP70_F/R \\(SR IDs: 598/9\\)", "HSP70", combined
 
 combined_df$Target <- gsub("Cg_Hsp90_F/R \\(SR IDs: 1532/3\\)", "HSP90", combined_df$Target)
 
-combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "VIPERIN", combined_df$Target)
+combined_df$Target <- gsub("Cg_VIPERIN_F/R \\(SR IDs: 1828/9\\)", "viperin", combined_df$Target)
 
 str(combined_df)
+
+levels(as.factor(combined_df$Target))
 ```
-
-
 
 ## Identify Samples with Cq.Std..Dev > 0.5
 ```{r high-cq-std-dev, eval=TRUE}
@@ -758,7 +758,7 @@ print(acute_treatment_t_test_results_df)
 ```{r acute-treatments-within-life-stages-conditioning, eval=TRUE}
 # Extract unique life.stage levels, excluding 'seed' and 'spat'
 unique_life_stages <- unique(delta_Cq_df$life.stage)
-unique_life_stages <- setdiff(unique_life_stages, c("seed", "spat"))
+#unique_life_stages <- setdiff(unique_life_stages, c("seed", "spat"))
 
 # Extract unique conditioning.treatment levels
 unique_conditioning_treatments <- unique(delta_Cq_df$conditioning.treatment)
