@@ -1061,3 +1061,252 @@ ggplot(delta_delta_acute_fold_change, aes(x = Target, y = fold_change, fill = ac
 ```
 
 
+
+# Running linear models 
+
+## ANOVA models 
+
+```{r}
+hist(delta_Cq_df$delta_Cq)
+```
+
+Run an anova model to test for effects of lifestage, conditioning, and acute treatment on delta Cq values for each target. 
+
+ATP synthase
+```{r}
+library(car)
+
+model<-delta_Cq_df%>%
+  filter(Target=="ATPsynthase")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+```
+No significant effects.  
+
+DNMT1
+```{r}
+
+model<-delta_Cq_df%>%
+  filter(Target=="DNMT1")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+```
+No significant effects. 
+
+HSP70
+```{r}
+
+model<-delta_Cq_df%>%
+  filter(Target=="HSP70")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+```
+Significant effect of conditioning x acute treatment. 
+
+HSP90
+```{r}
+
+model<-delta_Cq_df%>%
+  filter(Target=="HSP90")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+```
+Significant effect of lifestage x acute treatment, lifestage x conditioning treatment, acute treatment, and lifestage. 
+
+cGAS
+```{r}
+
+model<-delta_Cq_df%>%
+  filter(Target=="cGAS")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+```
+Significant effect of lifestage x acute treatment and lifestage.  
+
+Citrate synthase 
+```{r}
+
+model<-delta_Cq_df%>%
+  filter(Target=="citrate synthase")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+```
+Significant effect of acute treatment and lifestage x acute treatment.  
+
+## Plotting 
+
+Display plot of acute x conditioning treatment faceted for each lifestage for each target.  
+
+### ATP synthase: No effects
+```{r, eval=TRUE}
+plot1<-delta_Cq_df%>%
+  filter(Target=="ATPsynthase")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_point()+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("ATP synthase (no sign. effects)")+
+  ylab("Delta Cq")+
+  ylim(-0.5,1.5)+
+  geom_hline(yintercept=0, linetype="dashed")+
+  theme_classic();plot1
+```
+
+### DNMT1: No effects
+```{r, eval=TRUE}
+plot2<-delta_Cq_df%>%
+  filter(Target=="DNMT1")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  geom_point()+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("DNMT (no sign. effects)")+
+  ylab("Delta Cq")+
+  geom_hline(yintercept=0, linetype="dashed")+
+  ylim(0,9)+
+  theme_classic();plot2
+```
+
+### HSP70: Significant effect of conditioning x acute treatment. 
+```{r, eval=TRUE}
+plot3<-delta_Cq_df%>%
+  filter(Target=="HSP70")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_point()+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("HSP70  (sign. conditioning x acute treatment)")+
+  ylab("Delta Cq")+
+  ylim(0,8)+
+  geom_hline(yintercept=0, linetype="dashed")+
+  theme_classic();plot3
+
+plot3a<-delta_Cq_df%>%
+  filter(Target=="HSP70")%>%
+  
+  group_by(Target, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  geom_point()+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("HSP70  (sign. conditioning x acute treatment)")+
+  ylab("Delta Cq")+
+  geom_hline(yintercept=0, linetype="dashed")+
+  ylim(0,8)+
+  theme_classic();plot3a
+```
+
+### HSP90: Significant effect of lifestage x acute treatment, lifestage x conditioning treatment, acute treatment, and lifestage. 
+```{r, eval=TRUE}
+plot4<-delta_Cq_df%>%
+  filter(Target=="HSP90")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_point()+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("HSP90  (sign. lifestage x acute & lifestage x conditioning treatment)")+
+  ylab("Delta Cq")+
+  ylim(-2,2.5)+
+  geom_hline(yintercept=0, linetype="dashed")+
+  theme_classic();plot4
+```
+
+### cGAS: Significant effect of lifestage x acute treatment and lifestage.  
+```{r, eval=TRUE}
+plot5<-delta_Cq_df%>%
+  filter(Target=="cGAS")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_point()+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("cGAS  (sign. lifestage x acute treatment)")+
+  ylab("Delta Cq")+
+  ylim(2,8)+
+  geom_hline(yintercept=0, linetype="dashed")+
+  theme_classic();plot5
+```
+
+### Citrate synthase: Significant effect of acute treatment and lifestage x acute treatment.  
+
+```{r, eval=TRUE}
+plot6<-delta_Cq_df%>%
+  filter(Target=="citrate synthase")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_point()+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("cGAS  (sign. lifestage x acute treatment)")+
+  ylab("Delta Cq")+
+  ylim(-2,3)+
+  geom_hline(yintercept=0, linetype="dashed")+
+  theme_classic();plot6
+```
+
+The HSP genes show effects of conditioning. The other genes show effects of lifestage and/or acute stress. 
+
+Lifestage specific stress responses. 
+
+
