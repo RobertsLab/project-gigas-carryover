@@ -1196,6 +1196,27 @@ pairs(emm)
 ```
 Significant effect of acute treatment and lifestage x acute treatment.  
 
+### Viperin
+
+Viperin limits replication of DNA and RNA viruses.  
+
+```{r, eval=TRUE}
+model<-delta_Cq_df%>%
+  filter(Target=="viperin")%>%
+  
+  aov(delta_Cq ~ life.stage * conditioning.treatment * acute.treatment, data=.)
+
+summary(model)
+
+qqPlot(model$residuals)
+
+leveneTest(model$residuals ~ life.stage*conditioning.treatment*acute.treatment, data=delta_Cq_df%>%filter(Target=="viperin"))
+
+emm<-emmeans(model, ~ conditioning.treatment:acute.treatment | life.stage)
+pairs(emm)
+```
+Significant effect of acute treatment and lifestage x acute treatment. 
+
 All tests pass normality and homogeneity of variance. ANOVA tests are appropriate. 
 
 ## Plotting 
@@ -1355,6 +1376,28 @@ plot6<-delta_Cq_df%>%
   ylim(-2,3)+
   geom_hline(yintercept=0, linetype="dashed")+
   theme_classic();plot6
+```
+
+### Viperin: Significant effect of lifestage and lifestage x acute treatment.  
+
+```{r, eval=TRUE}
+plot7<-delta_Cq_df%>%
+  filter(Target=="viperin")%>%
+  
+  group_by(Target, life.stage, acute.treatment, conditioning.treatment)%>%
+  summarise(mean=mean(delta_Cq, na.rm=TRUE), se=sd(delta_Cq, na.rm=TRUE)/sqrt(length(delta_Cq)))%>%
+  
+  ggplot(aes(x=acute.treatment, y=mean, colour=conditioning.treatment))+
+  facet_grid(~life.stage)+
+  scale_colour_manual(values=c("darkgray", "orange"))+
+  geom_point()+
+  geom_line(aes(group=conditioning.treatment))+
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.1)+
+  ggtitle("Viperin  (sign. lifestage x acute treatment)")+
+  ylab("Delta Cq")+
+  ylim(0,6)+
+  geom_hline(yintercept=0, linetype="dashed")+
+  theme_classic();plot7
 ```
 
 ## Conclusions 
