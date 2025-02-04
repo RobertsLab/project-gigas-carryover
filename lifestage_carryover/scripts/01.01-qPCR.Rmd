@@ -21,6 +21,8 @@ output:
     code_folding: show
     code_download: true
 link-citations: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Description
@@ -1398,6 +1400,49 @@ plot7<-delta_Cq_df%>%
   ylim(0,6)+
   geom_hline(yintercept=0, linetype="dashed")+
   theme_classic();plot7
+```
+
+Plot spat HSP 70 and HSP 90 
+```{r}
+
+plot8<-delta_Cq_df%>%
+  dplyr::filter(Target=="HSP90")%>%
+  dplyr::filter(life.stage=="spat")%>%
+  
+  ggplot(aes(x=acute.treatment, y=delta_Cq, colour=conditioning.treatment))+
+  facet_wrap(~Target, scales="free")+
+  scale_colour_manual(values=c("darkgray", "orange"), name="Priming")+
+  geom_boxplot(outliers=FALSE)+
+  geom_point(position=position_jitterdodge(0.1))+
+  ggtitle("HSP90")+
+  geom_text(x=2, y=1, label="*", size=12, color="black")+
+  ylab("Expression")+
+  xlab("Temperature")+
+  ylim(-2,3)+
+  theme_classic()+
+  theme(legend.position="none");plot8
+
+
+plot8a<-delta_Cq_df%>%
+  dplyr::filter(Target=="HSP70")%>%
+  dplyr::filter(life.stage=="spat")%>%
+  
+  ggplot(aes(x=acute.treatment, y=delta_Cq, colour=conditioning.treatment))+
+  facet_wrap(~Target, scales="free")+
+  scale_colour_manual(values=c("darkgray", "orange"), name="Priming")+
+  geom_boxplot(outliers=FALSE)+
+  geom_point(position=position_jitterdodge(0.1))+
+  ggtitle("HSP70")+
+  geom_text(x=2, y=9, label="*", size=12, color="black")+
+  ylab("Expression")+
+  xlab("Temperature")+
+  ylim(-2,10)+
+  theme_classic();plot8a
+
+library(cowplot)
+plots<-plot_grid(plot8, plot8a, nrow=1, rel_widths=c(0.8,1))
+
+ggsave(plots, filename="lifestage_carryover/output/qPCR/spat-heat-shock.png", width=8, height=4)
 ```
 
 ## Conclusions 
