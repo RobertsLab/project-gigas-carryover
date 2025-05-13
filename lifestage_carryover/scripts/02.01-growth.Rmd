@@ -601,22 +601,6 @@ plot12<-replicates%>%
 ggsave(plot=plot12, "lifestage_carryover/output/size/lifestage_growth.png", width=5, height=5)
 ```
 
-Calculate size of each lifestage 
-```{r}
-avg_size<-replicates%>%
-  select(lifestage, Feb)%>%
-  group_by(lifestage)%>%
-  summarise(mean=mean(Feb, na.rm=TRUE));avg_size
-```
-
-```{r}
-avg_size<-replicates%>%
-  select(lifestage, tag, Feb)%>%
-  filter(lifestage=="adult")%>%
-  group_by(tag)%>%
-  summarise(mean=mean(Feb, na.rm=TRUE));avg_size
-```
-
 # Growth of spat from October 23 - October 24
 
 Plot growth of spat 
@@ -639,6 +623,25 @@ plot<-growth%>%
 
 ggsave(plot=plot, "lifestage_carryover/output/size/spat_lengths_box.png", width=7, height=4)
 ```
+
+Run a model. 
+
+```{r}
+library(lme4)
+library(lmerTest)
+
+model<-growth%>%
+  filter(lifestage=="spat")%>%
+  
+  lmer(length.mm ~ month * treatment + (1|tag), data=.)
+
+anova(model)
+
+emm<-emmeans(model, ~treatment | month)
+pairs(emm)
+```
+
+Treated is greater than control in August, but control is greater than treated in October.  
 
 # Individual growth tracking phase (Adults, seed, and juveniles)   
 
