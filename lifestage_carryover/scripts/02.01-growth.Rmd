@@ -653,16 +653,18 @@ individuals<-individuals%>%
 individuals$unique_id<-paste0(individuals$bag, "-", individuals$oyster)
 ```
 
-Calculate individual growth by calculating the percent change from April to May for each individual. We will not use March due too a caliper error.  
+Calculate individual growth by calculating the percent change from April to Aug for each individual. We will not use March due too a caliper error.  
 
 I will use August lengths for this calculation because many died by October.  
 
 ```{r}
 individuals_wide<-individuals%>%
-  mutate(perc_growth_May=((August-May)/August)*100)
+  mutate(perc_growth_Aug=((August-May)/August)*100)
 
 individuals_long<-individuals%>%
   pivot_longer(names_to="month", values_to="length.mm", cols=c(March:October))
+
+individuals_long$month<-factor(individuals_long$month, levels=c("March", "April", "May", "June", "August", "October"))
 ```
 
 # Plot and run anova models  
@@ -674,12 +676,13 @@ plot_ind<-individuals_long%>%
   filter(!month=="March")%>%
   
   ggplot(aes(color=`init-treat`, x=month, y=length.mm))+
-  geom_point(size=1)+
-  geom_line(aes(group=unique_id))+
+  geom_point(size=1, alpha=0.2)+
+  geom_line(aes(group=unique_id), alpha=0.2)+
+  geom_smooth(aes(group=`init-treat`), se=FALSE, method="lm")+
   facet_grid(~`life-stage`)+
   ylab("Length (mm)")+
   xlab("Month")+
-  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  scale_color_manual(values=c("black", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
   theme_classic()+
   theme(
     text=element_text(size=12, color="black")
