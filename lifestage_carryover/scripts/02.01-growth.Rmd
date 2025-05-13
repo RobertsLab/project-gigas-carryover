@@ -43,7 +43,7 @@ growth<-growth%>%
   select(tag, `life-stage`, `init-treat`, month, length.mm)%>%
   rename(lifestage=`life-stage`, treatment=`init-treat`)
 
-growth$month<-factor(growth$month, levels=c("Oct", "Nov", "Jan", "Feb", "March", "April", "May"))
+growth$month<-factor(growth$month, levels=c("October23", "November23", "January24", "February24", "March24", "April24", "May24", "June24", "August24", "October24"))
 ```
 
 ## Look at data for whole population together  
@@ -107,15 +107,15 @@ model<-aov(length.mm~lifestage*month*treatment, data=growth)
 summary(model)
 ```
 
-                            Df  Sum Sq Mean Sq  F value  Pr(>F)    
-lifestage                    3 1187777  395926 9758.267 < 2e-16 ***
-month                        6   12889    2148   52.943 < 2e-16 ***
-treatment                    1     162     162    3.992 0.04580 *  
-lifestage:month              6   21932    3655   90.094 < 2e-16 ***
-lifestage:treatment          3     573     191    4.711 0.00277 ** 
-month:treatment              6     103      17    0.423 0.86429    
-lifestage:month:treatment    6     203      34    0.833 0.54413    
-Residuals                 3282  133162      41         
+                            Df  Sum Sq Mean Sq  F value   Pr(>F)    
+lifestage                    3 1232029  410676 9199.112  < 2e-16 ***
+month                        9   26895    2988   66.937  < 2e-16 ***
+treatment                    1       5       5    0.122 0.727176    
+lifestage:month              6   21947    3658   81.935  < 2e-16 ***
+lifestage:treatment          3     756     252    5.644 0.000741 ***
+month:treatment              9    4531     503   11.277  < 2e-16 ***
+lifestage:month:treatment    6     203      34    0.757 0.603698    
+Residuals                 3983  177813      45        
 
 Conduct posthoc test
 ```{r}
@@ -124,7 +124,7 @@ emm<-emmeans(model, ~ treatment | month | lifestage)
 pairs(emm)
 ```
 
-Size is different in October and November for adults. No other differences.  
+August and October are different for spat 
 
 Conduct model for all time points for only spat.  
 
@@ -137,11 +137,11 @@ model<-growth%>%
 summary(model)
 ```
 
-                  Df Sum Sq Mean Sq F value   Pr(>F)    
-month              5    371   74.18   7.939 2.03e-07 ***
-treatment          1     18   17.79   1.904   0.1678    
-month:treatment    5    104   20.85   2.232   0.0487 *  
-Residuals       2024  18910    9.34 
+                  Df Sum Sq Mean Sq F value Pr(>F)    
+month              8  14377  1797.1  77.046 <2e-16 ***
+treatment          1     58    58.2   2.497  0.114    
+month:treatment    8   4532   566.5  24.289 <2e-16 ***
+Residuals       2725  63561    23.3  
 
 Conduct post hoc tests. 
 
@@ -150,7 +150,7 @@ emm<-emmeans(model, ~ treatment | month)
 pairs(emm)
 ```
 
-Spat were smaller in treated condiction in Feb and March, but no difference in other months. 
+Treated were larger in August, but smaller in October 
 
 ## Plot size of only adults 
 
@@ -209,11 +209,11 @@ replicates<-growth%>%
   group_by(treatment, month, lifestage, tag)%>%
   summarise(mean=mean(length.mm, na.rm=TRUE))%>%
   pivot_wider(names_from=month, values_from=mean)%>%
-  mutate(perc_growth_Nov=((Nov-Oct)/Oct)*100)%>%
-  mutate(perc_growth_Jan=((Jan-Oct)/Oct)*100)%>%
-  mutate(perc_growth_Feb=((Feb-Oct)/Oct)*100)%>%
-  mutate(perc_growth_April=((April-Oct)/Oct)*100)%>%
-  mutate(perc_growth_May=((May-Oct)/Oct)*100)
+  mutate(perc_growth_Nov=((November23-October23)/October23)*100)%>%
+  mutate(perc_growth_Jan=((January24-October23)/October23)*100)%>%
+  mutate(perc_growth_Feb=((February24-October23)/October23)*100)%>%
+  mutate(perc_growth_April=((April24-October23)/October23)*100)%>%
+  mutate(perc_growth_May=((May24-October23)/October23)*100)
 ```
 
 ### Plot growth for adult animals sampled in November
@@ -617,6 +617,29 @@ avg_size<-replicates%>%
   summarise(mean=mean(Feb, na.rm=TRUE));avg_size
 ```
 
+# Growth of spat from October 23 - October 24
+
+Plot growth of spat 
+```{r}
+plot<-growth%>%
+  filter(lifestage=="spat")%>%
+  
+  ggplot(aes(color=treatment, x=month, y=length.mm))+
+  geom_boxplot(fill=NA, outlier.shape=NA)+
+  geom_point(size=1, position=position_jitterdodge(0.1))+
+  facet_grid(~lifestage, scales="free_x")+
+  ylab("Mean Length (mm)")+
+  xlab("Month")+
+  scale_color_manual(values=c("darkgray", "darkred"), name="Treatment", labels=c("Control", "Treatment"))+
+  theme_classic()+
+  ylim(0,50)+
+  theme(
+    text=element_text(size=12, color="black")
+  );plot
+
+ggsave(plot=plot, "lifestage_carryover/output/size/spat_lengths_box.png", width=7, height=4)
+```
+
 # Individual growth tracking phase (Adults, seed, and juveniles)   
 
 Load data for individual growth measurements
@@ -632,12 +655,14 @@ individuals$unique_id<-paste0(individuals$bag, "-", individuals$oyster)
 
 Calculate individual growth by calculating the percent change from April to May for each individual. We will not use March due too a caliper error.  
 
+I will use August lengths for this calculation because many died by October.  
+
 ```{r}
 individuals_wide<-individuals%>%
-  mutate(perc_growth_May=((April-May)/April)*100)
+  mutate(perc_growth_May=((August-May)/August)*100)
 
 individuals_long<-individuals%>%
-  pivot_longer(names_to="month", values_to="length.mm", cols=c(March:May))
+  pivot_longer(names_to="month", values_to="length.mm", cols=c(March:October))
 ```
 
 # Plot and run anova models  
