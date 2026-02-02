@@ -3,6 +3,9 @@ title: "01.01-qPCR"
 author: "Sam White"
 date: "2024-12-20"
 output: 
+  github_document:
+    toc: true
+    number_sections: true
   bookdown::html_document2:
     theme: cosmo
     toc: true
@@ -10,9 +13,6 @@ output:
     number_sections: true
     code_folding: show
     code_download: true
-  github_document:
-    toc: true
-    number_sections: true
   html_document:
     theme: cosmo
     toc: true
@@ -22,7 +22,7 @@ output:
     code_download: true
 link-citations: true
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Description
@@ -36,7 +36,7 @@ library(ggplot2)
 
 knitr::opts_chunk$set(
   echo = TRUE,         # Display code chunks
-  eval = FALSE,        # Evaluate code chunks
+  eval = TRUE,        # Evaluate code chunks
   warning = FALSE,     # Hide warnings
   message = FALSE,     # Hide messages
   comment = ""         # Prevents appending '##' to beginning of lines in code output
@@ -444,7 +444,7 @@ create_boxplot_acute_conditioning <- function(data, comparison, t_test_results) 
 ```
 
 # Read in files
-```{r read-in-Cq-files, eval=TRUE}
+```{r read-in-Cq-files, echo=TRUE}
 
 # Get a list of all CSV files in the directory with the naming structure "*Cq-Results.csv"
 cq_file_list <- list() # Initialize list
@@ -1441,7 +1441,7 @@ plot8a<-delta_Cq_df%>%
 library(cowplot)
 plots<-plot_grid(plot8, plot8a, nrow=1, rel_widths=c(0.8,1))
 
-ggsave(plots, filename="lifestage_carryover/output/qPCR/spat-heat-shock.png", width=8, height=4)
+ggsave(plots, filename="../output/qPCR/spat-heat-shock.png", width=8, height=4)
 ```
 
 ## Conclusions 
