@@ -11,6 +11,11 @@ Research Program (SRGARP)](https://www.nifa.usda.gov/sites/default/files/2022-04
 **Start**: 2022-09-01 </br>
 **End**: 2024-09-01
 
+## Industry Recommendations
+1. **[Executive Summary: Oyster Industry Recommendations](Executive_Summary_Oyster_Recommendations.md)** - Quick reference for industry implementation
+2. **[Industry Recommendations for Field Survival](Industry_Recommendations_Field_Survival.md)** - Comprehensive guidelines for hatchery conditioning protocols
+3. **[Technical Supplement: Molecular Mechanisms](Technical_Supplement_Molecular_Mechanisms.md)** - Scientific background and detailed methodology
+
 ## Pertinent documents
 1. [proposal](https://docs.google.com/document/d/1Z1cGEJvTieQmvRmxzymGGf-YnUPVL7YWESoMa0ZLy6M/edit?usp=sharing)
 2. [immune priming pilot shell measurements](https://docs.google.com/spreadsheets/d/137GskcHVnR6iOBJ9MlP4Au8CMMez2Ew0IbhZ4HUnkYo/edit?usp=sharing)
@@ -39,4 +44,17 @@ USDA: 62-7174
 ![image](https://user-images.githubusercontent.com/70529576/221789776-1f9a2920-7091-407f-8196-6b23a48974ea.png)
 
 Winter-Spring 2024: Repeat stress conditiong experiment in 4 lifestages  
+
+## Research Conclusions and Industry Impact
+
+This USDA-SRGARP funded research demonstrates that **thermal conditioning significantly improves stress tolerance in Pacific oysters**, with effects varying by life stage. Key findings include:
+
+- **Spat and seed stages** show the strongest responses to conditioning protocols
+- **Adults** demonstrate enhanced thermal tolerance through increased HSP90 expression  
+- **Molecular evidence** confirms conditioning triggers adaptive cellular responses
+- **Practical protocols** have been developed for industry implementation
+
+**Industry Recommendation**: Implement thermal conditioning (daily ramps to 25°C for 6 hours over 4-6 weeks) focusing on spat and seed stages to maximize field survival improvements.
+
+For detailed implementation guidance, see the [Industry Recommendations](Industry_Recommendations_Field_Survival.md) document.
 
